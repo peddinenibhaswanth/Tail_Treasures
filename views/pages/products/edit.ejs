@@ -1,0 +1,130 @@
+<div class="row justify-content-center">
+  <div class="col-md-10">
+    <div class="card">
+      <div class="card-header bg-primary text-white">
+        <h4 class="mb-0"><i class="fas fa-edit me-2"></i>Edit Product: <%= product.name %></h4>
+      </div>
+      <div class="card-body">
+        <form action="/products/<%= product._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="name" class="form-label">Product Name</label>
+              <input type="text" class="form-control" id="name" name="name" value="<%= product.name %>" required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="price" class="form-label">Price ($)</label>
+              <input type="number" class="form-control" id="price" name="price" step="0.01" min="0" value="<%= product.price %>" required>
+            </div>
+          </div>
+          
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="category" class="form-label">Category</label>
+              <select class="form-select" id="category" name="category" required>
+                <option value="">Select Category</option>
+                <option value="food" <%= product.category === 'food' ? 'selected' : '' %>>Food</option>
+                <option value="toys" <%= product.category === 'toys' ? 'selected' : '' %>>Toys</option>
+                <option value="accessories" <%= product.category === 'accessories' ? 'selected' : '' %>>Accessories</option>
+                <option value="health" <%= product.category === 'health' ? 'selected' : '' %>>Health & Wellness</option>
+                <option value="grooming" <%= product.category === 'grooming' ? 'selected' : '' %>>Grooming</option>
+                <option value="bedding" <%= product.category === 'bedding' ? 'selected' : '' %>>Bedding</option>
+                <option value="clothing" <%= product.category === 'clothing' ? 'selected' : '' %>>Clothing</option>
+                <option value="other" <%= product.category === 'other' ? 'selected' : '' %>>Other</option>
+              </select>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="petType" class="form-label">Pet Type</label>
+              <select class="form-select" id="petType" name="petType" required>
+                <option value="">Select Pet Type</option>
+                <option value="dog" <%= product.petType === 'dog' ? 'selected' : '' %>>Dogs</option>
+                <option value="cat" <%= product.petType === 'cat' ? 'selected' : '' %>>Cats</option>
+                <option value="bird" <%= product.petType === 'bird' ? 'selected' : '' %>>Birds</option>
+                <option value="fish" <%= product.petType === 'fish' ? 'selected' : '' %>>Fish</option>
+                <option value="small_pet" <%= product.petType === 'small_pet' ? 'selected' : '' %>>Small Pets</option>
+                <option value="reptile" <%= product.petType === 'reptile' ? 'selected' : '' %>>Reptiles</option>
+                <option value="all" <%= product.petType === 'all' ? 'selected' : '' %>>Universal (All Pets)</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="stock" class="form-label">Stock Quantity</label>
+              <input type="number" class="form-control" id="stock" name="stock" min="0" value="<%= product.stock %>" required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <div class="form-check form-switch mt-4">
+                <input class="form-check-input" type="checkbox" id="onSale" name="onSale" <%= product.onSale ? 'checked' : '' %>>
+                <label class="form-check-label" for="onSale">On Sale</label>
+              </div>
+              <div id="salePriceContainer" class="mt-2 <%= !product.onSale ? 'd-none' : '' %>">
+                <label for="salePrice" class="form-label">Sale Price ($)</label>
+                <input type="number" class="form-control" id="salePrice" name="salePrice" step="0.01" min="0" value="<%= product.salePrice || '' %>">
+              </div>
+            </div>
+          </div>
+          
+          <div class="mb-3">
+            <label for="description" class="form-label">Product Description</label>
+            <textarea class="form-control" id="description" name="description" rows="4" required><%= product.description %></textarea>
+          </div>
+          
+          <div class="mb-3">
+            <label class="form-label">Current Images</label>
+            <div class="row mb-3">
+              <% product.images.forEach((image, index) => { %>
+                <div class="col-md-3 mb-2">
+                  <div class="card">
+                    <img src="<%= image %>" class="card-img-top" alt="Product image <%= index + 1 %>" style="height: 150px; object-fit: cover;">
+                    <div class="card-body p-2 text-center">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="deleteImage<%= index %>" name="deleteImages" value="<%= index %>">
+                        <label class="form-check-label" for="deleteImage<%= index %>">Delete</label>
+                      </div>
+                      <% if (index === 0) { %>
+                        <small class="text-muted">(Main Image)</small>
+                      <% } %>
+                    </div>
+                  </div>
+                </div>
+              <% }); %>
+            </div>
+          </div>
+          
+          <div class="mb-3">
+            <label for="images" class="form-label">Add New Images</label>
+            <input type="file" class="form-control" id="images" name="images" accept="image/*" multiple>
+            <small class="text-muted">You can select multiple images. Leave empty if you don't want to add new images.</small>
+          </div>
+          
+          <div class="mb-3">
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" id="featured" name="featured" <%= product.featured ? 'checked' : '' %>>
+              <label class="form-check-label" for="featured">Feature this product on the homepage</label>
+            </div>
+          </div>
+          
+          <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <a href="/dashboard" class="btn btn-outline-secondary">Cancel</a>
+            <button type="submit" class="btn btn-primary">Update Product</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const onSaleCheckbox = document.getElementById('onSale');
+    const salePriceContainer = document.getElementById('salePriceContainer');
+    
+    onSaleCheckbox.addEventListener('change', function() {
+      if (this.checked) {
+        salePriceContainer.classList.remove('d-none');
+      } else {
+        salePriceContainer.classList.add('d-none');
+      }
+    });
+  });
+</script>

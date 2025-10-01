@@ -1,0 +1,164 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-8 offset-md-2">
+      <div class="card mb-4">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+          <h4 class="mb-0"><i class="fas fa-file-alt me-2"></i>Adoption Application</h4>
+          <span class="badge bg-<%= application.status === 'submitted' ? 'primary' : application.status === 'under review' ? 'warning' : application.status === 'approved' ? 'success' : 'danger' %>">
+            <%= application.status.charAt(0).toUpperCase() + application.status.slice(1) %>
+          </span>
+        </div>
+        <div class="card-body">
+          <div class="row mb-4">
+            <div class="col-md-4">
+              <img src="<%= application.pet.mainImage %>" alt="<%= application.pet.name %>" class="img-fluid rounded">
+            </div>
+            <div class="col-md-8">
+              <h5><%= application.pet.name %></h5>
+              <p>
+                <span class="badge bg-primary"><%= application.pet.species.charAt(0).toUpperCase() + application.pet.species.slice(1) %></span>
+                <% if (application.pet.breed) { %>
+                  <span class="badge bg-secondary"><%= application.pet.breed %></span>
+                <% } %>
+              </p>
+              <p><strong>Age:</strong> <%= application.pet.age.value %> <%= application.pet.age.unit %></p>
+              <p><strong>Shelter:</strong> <%= application.shelter.name %></p>
+              <p><strong>Adoption Fee:</strong> $<%= application.pet.adoptionFee.toFixed(2) %></p>
+              <p><strong>Application Date:</strong> <%= new Date(application.createdAt).toLocaleDateString() %></p>
+            </div>
+          </div>
+          
+          <h5 class="mb-3">Applicant Information</h5>
+          <table class="table">
+            <tbody>
+              <tr>
+                <th style="width: 30%;">Name</th>
+                <td><%= application.adopter.name %></td>
+              </tr>
+              <tr>
+                <th>Email</th>
+                <td><%= application.adopter.email %></td>
+              </tr>
+              <tr>
+                <th>Phone</th>
+                <td><%= application.adopter.phone || 'Not provided' %></td>
+              </tr>
+            </tbody>
+          </table>
+          
+          <h5 class="mb-3 mt-4">Home Environment</h5>
+          <table class="table">
+            <tbody>
+              <tr>
+                <th style="width: 30%;">Home Type</th>
+                <td><%= application.homeType.charAt(0).toUpperCase() + application.homeType.slice(1) %></td>
+              </tr>
+              <tr>
+                <th>Has Yard</th>
+                <td><%= application.hasYard ? 'Yes' : 'No' %></td>
+              </tr>
+              <tr>
+                <th>Has Children</th>
+                <td><%= application.hasChildren ? 'Yes' : 'No' %></td>
+              </tr>
+              <% if (application.hasChildren && application.childrenAges) { %>
+                <tr>
+                  <th>Children Ages</th>
+                  <td><%= application.childrenAges %></td>
+                </tr>
+              <% } %>
+              <tr>
+                <th>Has Other Pets</th>
+                <td><%= application.hasOtherPets ? 'Yes' : 'No' %></td>
+              </tr>
+              <% if (application.hasOtherPets && application.otherPetsDescription) { %>
+                <tr>
+                  <th>Other Pets</th>
+                  <td><%= application.otherPetsDescription %></td>
+                </tr>
+              <% } %>
+            </tbody>
+          </table>
+          
+          <h5 class="mb-3 mt-4">Additional Information</h5>
+          <table class="table">
+            <tbody>
+              <tr>
+                <th style="width: 30%;">Work Schedule</th>
+                <td><%= application.workSchedule %></td>
+              </tr>
+              <tr>
+                <th>Pet Experience</th>
+                <td><%= application.experience %></td>
+              </tr>
+              <tr>
+                <th>Reason for Adopting</th>
+                <td><%= application.reasonForAdopting %></td>
+              </tr>
+              <% if (application.additionalInfo) { %>
+                <tr>
+                  <th>Additional Info</th>
+                  <td><%= application.additionalInfo %></td>
+                </tr>
+              <% } %>
+            </tbody>
+          </table>
+          
+          <% if (application.status === 'denied' && application.denialReason) { %>
+            <div class="alert alert-danger mt-4">
+              <h5 class="alert-heading">Denial Reason</h5>
+              <p><%= application.denialReason %></p>
+            </div>
+          <% } %>
+          
+          <% if (currentUser && (currentUser.role === 'admin' || (currentUser.role === 'seller' && currentUser._id.toString() === application.shelter.toString()))) { %>
+            <div class="card mt-4">
+              <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Update Application Status</h5>
+              </div>
+              <div class="card-body">
+                <form action="/dashboard/applications/<%= application._id %>/status" method="POST">
+                  <div class="mb-3">
+                    <label for="status" class="form-label">Status</label>
+                    <select class="form-select" id="status" name="status" required>
+                      <option value="submitted" <%= application.status === 'submitted' ? 'selected' : '' %>>Submitted</option>
+                      <option value="under review" <%= application.status === 'under review' ? 'selected' : '' %>>Under Review</option>
+                      <option value="approved" <%= application.status === 'approved' ? 'selected' : '' %>>Approved</option>
+                      <option value="denied" <%= application.status === 'denied' ? 'selected' : '' %>>Denied</option>
+                    </select>
+                  </div>
+                  
+                  <div id="denialReasonContainer" class="mb-3 <%= application.status !== 'denied' ? 'd-none' : '' %>">
+                    <label for="denialReason" class="form-label">Denial Reason</label>
+                    <textarea class="form-control" id="denialReason" name="denialReason" rows="3"><%= application.denialReason || '' %></textarea>
+                  </div>
+                  
+                  <div class="d-grid">
+                    <button type="submit" class="btn btn-primary">Update Status</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const statusSelect = document.getElementById('status');
+    const denialReasonContainer = document.getElementById('denialReasonContainer');
+    
+    if (statusSelect && denialReasonContainer) {
+      statusSelect.addEventListener('change', function() {
+        if (this.value === 'denied') {
+          denialReasonContainer.classList.remove('d-none');
+        } else {
+          denialReasonContainer.classList.add('d-none');
+        }
+      });
+    }
+  });
+</script>

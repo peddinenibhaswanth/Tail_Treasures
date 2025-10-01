@@ -1,0 +1,168 @@
+<%- include('../../partials/admin-header') %>
+
+<div class="container-fluid py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3 mb-0">Pending User Details</h1>
+    <a href="/admin/users" class="btn btn-outline-primary"><i class="fas fa-arrow-left me-2"></i>Back to Users</a>
+  </div>
+  
+  <div class="row">
+    <div class="col-md-4">
+      <div class="card mb-4">
+        <div class="card-header bg-warning text-white">
+          <h5 class="mb-0">User Profile</h5>
+        </div>
+        <div class="card-body text-center">
+          <img src="<%= user.profileImage %>" alt="<%= user.name %>" class="rounded-circle img-thumbnail mb-3" style="width: 150px; height: 150px; object-fit: cover;">
+          <h4><%= user.name %></h4>
+          <p class="text-muted">
+            <span class="badge bg-<%= user.role === 'admin' ? 'danger' : user.role === 'seller' ? 'success' : user.role === 'veterinary' ? 'warning' : 'info' %>">
+              <%= user.role.charAt(0).toUpperCase() + user.role.slice(1) %>
+            </span>
+            <span class="badge bg-warning ms-1">Pending Approval</span>
+          </p>
+          <p><i class="fas fa-envelope me-2"></i><%= user.email %></p>
+          <% if (user.phone) { %>
+            <p><i class="fas fa-phone me-2"></i><%= user.phone %></p>
+          <% } %>
+          <p><i class="fas fa-calendar me-2"></i>Joined: <%= new Date(user.createdAt).toLocaleDateString() %></p>
+        </div>
+        <div class="card-footer">
+          <div class="d-grid gap-2">
+            <form action="/admin/users/<%= user._id %>/approve" method="POST">
+              <button type="submit" class="btn btn-success w-100 mb-2">
+                <i class="fas fa-check me-2"></i>Approve User
+              </button>
+            </form>
+            <form action="/admin/users/<%= user._id %>/reject" method="POST">
+              <button type="submit" class="btn btn-danger w-100">
+                <i class="fas fa-times me-2"></i>Reject User
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-md-8">
+      <div class="card mb-4">
+        <div class="card-header bg-warning text-white">
+          <h5 class="mb-0">User Details</h5>
+        </div>
+        <div class="card-body">
+          <h6>Contact Information</h6>
+          <table class="table">
+            <tbody>
+              <tr>
+                <th style="width: 30%;">Email</th>
+                <td><%= user.email %></td>
+              </tr>
+              <tr>
+                <th>Phone</th>
+                <td><%= user.phone || 'Not provided' %></td>
+              </tr>
+            </tbody>
+          </table>
+          
+          <h6 class="mt-4">Address</h6>
+          <% if (user.address && (user.address.street || user.address.city || user.address.state || user.address.zipCode || user.address.country)) { %>
+            <table class="table">
+              <tbody>
+                <tr>
+                  <th style="width: 30%;">Street</th>
+                  <td><%= user.address.street || 'Not provided' %></td>
+                </tr>
+                <tr>
+                  <th>City</th>
+                  <td><%= user.address.city || 'Not provided' %></td>
+                </tr>
+                <tr>
+                  <th>State</th>
+                  <td><%= user.address.state || 'Not provided' %></td>
+                </tr>
+                <tr>
+                  <th>Zip Code</th>
+                  <td><%= user.address.zipCode || 'Not provided' %></td>
+                </tr>
+                <tr>
+                  <th>Country</th>
+                  <td><%= user.address.country || 'Not provided' %></td>
+                </tr>
+              </tbody>
+            </table>
+          <% } else { %>
+            <p class="text-muted">No address information provided.</p>
+          <% } %>
+          
+          <% if (user.role === 'seller' && user.sellerInfo) { %>
+            <h6 class="mt-4">Seller Information</h6>
+            <table class="table">
+              <tbody>
+                <tr>
+                  <th style="width: 30%;">Business Name</th>
+                  <td><%= user.sellerInfo.businessName || 'Not provided' %></td>
+                </tr>
+                <tr>
+                  <th>Website</th>
+                  <td><%= user.sellerInfo.website || 'Not provided' %></td>
+                </tr>
+                <tr>
+                  <th>Description</th>
+                  <td><%= user.sellerInfo.description || 'Not provided' %></td>
+                </tr>
+              </tbody>
+            </table>
+          <% } else if (user.role === 'veterinary' && user.vetInfo) { %>
+            <h6 class="mt-4">Veterinary Information</h6>
+            <table class="table">
+              <tbody>
+                <tr>
+                  <th style="width: 30%;">License Number</th>
+                  <td><%= user.vetInfo.licenseNumber || 'Not provided' %></td>
+                </tr>
+                <tr>
+                  <th>Specialization</th>
+                  <td><%= user.vetInfo.specialization || 'Not provided' %></td>
+                </tr>
+                <tr>
+                  <th>Experience</th>
+                  <td><%= user.vetInfo.experience ? `${user.vetInfo.experience} years` : 'Not provided' %></td>
+                </tr>
+                <tr>
+                  <th>Education</th>
+                  <td><%= user.vetInfo.education || 'Not provided' %></td>
+                </tr>
+                <tr>
+                  <th>Bio</th>
+                  <td><%= user.vetInfo.bio || 'Not provided' %></td>
+                </tr>
+                <tr>
+                  <th>Available Days</th>
+                  <td>
+                    <% if (user.vetInfo.availableDays && user.vetInfo.availableDays.length > 0) { %>
+                      <%= user.vetInfo.availableDays.join(', ') %>
+                    <% } else { %>
+                      Not provided
+                    <% } %>
+                  </td>
+                </tr>
+                <tr>
+                  <th>Working Hours</th>
+                  <td>
+                    <% if (user.vetInfo.availableHours && user.vetInfo.availableHours.start && user.vetInfo.availableHours.end) { %>
+                      <%= user.vetInfo.availableHours.start %> - <%= user.vetInfo.availableHours.end %>
+                    <% } else { %>
+                      Not provided
+                    <% } %>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('../../partials/admin-footer') %>

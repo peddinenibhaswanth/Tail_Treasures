@@ -1,0 +1,158 @@
+<div class="container py-5">
+  <div class="row">
+    <div class="col-lg-8 mx-auto">
+      <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/dashboard">Dashboard</a></li>
+          <li class="breadcrumb-item"><a href="/dashboard/orders">My Orders</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Order #<%= order._id.toString().slice(-6).toUpperCase() %></li>
+        </ol>
+      </nav>
+
+      <div class="card shadow-sm mb-4">
+        <div class="card-header bg-white">
+          <div class="d-flex justify-content-between align-items-center">
+            <h4 class="mb-0">Order #<%= order._id.toString().slice(-6).toUpperCase() %></h4>
+            <span class="badge <%= order.status === 'placed' ? 'bg-primary' : 
+                                  order.status === 'processing' ? 'bg-info' : 
+                                  order.status === 'shipped' ? 'bg-warning text-dark' : 
+                                  order.status === 'delivered' ? 'bg-success' : 
+                                  'bg-danger' %>">
+              <%= order.status.charAt(0).toUpperCase() + order.status.slice(1) %>
+            </span>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="row mb-4">
+            <div class="col-md-6">
+              <h5 class="text-muted">Order Information</h5>
+              <p class="mb-1"><strong>Date:</strong> <%= new Date(order.createdAt).toLocaleString() %></p>
+              <p class="mb-1"><strong>Payment Method:</strong> <%= order.paymentMethod.charAt(0).toUpperCase() + order.paymentMethod.slice(1) %></p>
+              <p class="mb-1"><strong>Payment Status:</strong> 
+                <span class="badge <%= order.paymentStatus === 'completed' ? 'bg-success' : 
+                                      order.paymentStatus === 'pending' ? 'bg-warning text-dark' : 
+                                      order.paymentStatus === 'refunded' ? 'bg-info' : 
+                                      'bg-danger' %>">
+                  <%= order.paymentStatus.charAt(0).toUpperCase() + order.paymentStatus.slice(1) %>
+                </span>
+              </p>
+              <% if (order.estimatedDelivery) { %>
+                <p class="mb-1"><strong>Estimated Delivery:</strong> <%= new Date(order.estimatedDelivery).toLocaleDateString() %></p>
+              <% } %>
+              <% if (order.trackingNumber) { %>
+                <p class="mb-1"><strong>Tracking Number:</strong> <%= order.trackingNumber %></p>
+              <% } %>
+            </div>
+            <div class="col-md-6">
+              <h5 class="text-muted">Shipping Address</h5>
+              <address>
+                <strong><%= order.shippingAddress.name %></strong><br>
+                <%= order.shippingAddress.street %><br>
+                <%= order.shippingAddress.city %>, <%= order.shippingAddress.state %> <%= order.shippingAddress.zipCode %><br>
+                <%= order.shippingAddress.country %><br>
+                <% if (order.shippingAddress.phone) { %>
+                  Phone: <%= order.shippingAddress.phone %>
+                <% } %>
+              </address>
+            </div>
+          </div>
+
+          <h5 class="text-muted mb-3">Order Items</h5>
+          <div class="table-responsive mb-4">
+            <table class="table table-hover">
+              <thead class="table-light">
+                <tr>
+                  <th>Product</th>
+                  <th>Price</th>
+                  <th>Quantity</th>
+                  <th class="text-end">Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% order.items.forEach(item => { %>
+                  <tr>
+                    <td>
+                      <div class="d-flex align-items-center">
+                        <% if (item.image) { %>
+                          <img src="<%= item.image %>" alt="<%= item.name %>" class="img-thumbnail me-3" style="width: 60px; height: 60px; object-fit: cover;">
+                        <% } else if (item.product && item.product.mainImage) { %>
+                          <img src="<%= item.product.mainImage %>" alt="<%= item.product.name %>" class="img-thumbnail me-3" style="width: 60px; height: 60px; object-fit: cover;">
+                        <% } else { %>
+                          <div class="bg-light me-3" style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-box text-muted"></i>
+                          </div>
+                        <% } %>
+                        <div>
+                          <h6 class="mb-0"><%= item.name || (item.product ? item.product.name : 'Product') %></h6>
+                          <% if (item.seller && item.seller.name) { %>
+                            <small class="text-muted">Seller: <%= item.seller.name %></small>
+                          <% } %>
+                        </div>
+                      </div>
+                    </td>
+                    <td>$<%= item.price.toFixed(2) %></td>
+                    <td><%= item.quantity %></td>
+                    <td class="text-end">$<%= (item.price * item.quantity).toFixed(2) %></td>
+                  </tr>
+                <% }); %>
+              </tbody>
+              <tfoot class="table-light">
+                <tr>
+                  <td colspan="3" class="text-end"><strong>Subtotal:</strong></td>
+                  <td class="text-end">$<%= order.subtotal ? order.subtotal.toFixed(2) : (order.totalAmount - (order.tax || 0) - (order.shipping || 0) + (order.discount || 0)).toFixed(2) %></td>
+                </tr>
+                <% if (order.discount && order.discount > 0) { %>
+                  <tr>
+                    <td colspan="3" class="text-end"><strong>Discount:</strong></td>
+                    <td class="text-end">-$<%= order.discount.toFixed(2) %></td>
+                  </tr>
+                <% } %>
+                <tr>
+                  <td colspan="3" class="text-end"><strong>Shipping:</strong></td>
+                  <td class="text-end">$<%= order.shipping ? order.shipping.toFixed(2) : '0.00' %></td>
+                </tr>
+                <tr>
+                  <td colspan="3" class="text-end"><strong>Tax:</strong></td>
+                  <td class="text-end">$<%= order.tax ? order.tax.toFixed(2) : '0.00' %></td>
+                </tr>
+                <tr>
+                  <td colspan="3" class="text-end"><strong>Total:</strong></td>
+                  <td class="text-end"><strong>$<%= order.totalAmount.toFixed(2) %></strong></td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+
+          <% if (order.notes) { %>
+            <div class="mb-4">
+              <h5 class="text-muted mb-2">Order Notes</h5>
+              <p class="mb-0"><%= order.notes %></p>
+            </div>
+          <% } %>
+
+          <div class="d-flex justify-content-between">
+            <div>
+              <% if (order.status === 'placed' || order.status === 'processing') { %>
+                <form action="/orders/<%= order._id %>/cancel" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to cancel this order?');">
+                  <button type="submit" class="btn btn-outline-danger">
+                    <i class="fas fa-times-circle me-1"></i> Cancel Order
+                  </button>
+                </form>
+              <% } %>
+            </div>
+            <div>
+              <a href="/dashboard/orders" class="btn btn-outline-secondary me-2">
+                <i class="fas fa-arrow-left me-1"></i> Back to Orders
+              </a>
+              <% if (order.status === 'shipped' && order.trackingNumber) { %>
+                <a href="#" class="btn btn-primary" target="_blank">
+                  <i class="fas fa-truck me-1"></i> Track Shipment
+                </a>
+              <% } %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,68 @@
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <div class="card">
+      <div class="card-header bg-success text-white">
+        <h4 class="mb-0"><i class="fas fa-check-circle me-2"></i>Appointment Confirmation</h4>
+      </div>
+      <div class="card-body text-center">
+        <i class="fas fa-calendar-check fa-5x text-success mb-3"></i>
+        <h3>Your appointment has been scheduled!</h3>
+        <p class="lead">Thank you for booking an appointment with us.</p>
+        
+        <div class="card mb-4 mt-4">
+          <div class="card-body">
+            <h5 class="card-title">Appointment Details</h5>
+            <table class="table table-bordered">
+              <tbody>
+                <tr>
+                  <th scope="row">Appointment ID</th>
+                  <td><%= appointment._id %></td>
+                </tr>
+                <tr>
+                  <th scope="row">Pet Name</th>
+                  <td><%= appointment.petName %></td>
+                </tr>
+                <tr>
+                  <th scope="row">Pet Type</th>
+                  <td><%= appointment.petType.charAt(0).toUpperCase() + appointment.petType.slice(1) %></td>
+                </tr>
+                <tr>
+                  <th scope="row">Veterinarian</th>
+                  <td>Dr. <%= appointment.veterinary.name %></td>
+                </tr>
+                <tr>
+                  <th scope="row">Date</th>
+                  <td><%= new Date(appointment.date).toLocaleDateString() %></td>
+                </tr>
+                <tr>
+                  <th scope="row">Time</th>
+                  <td><%= appointment.time %></td>
+                </tr>
+                <tr>
+                  <th scope="row">Reason</th>
+                  <td><%= appointment.reason.charAt(0).toUpperCase() + appointment.reason.slice(1) %></td>
+                </tr>
+                <tr>
+                  <th scope="row">Status</th>
+                  <td>
+                    <span class="badge bg-warning">Pending</span>
+                    <small class="d-block mt-1">Your appointment will be confirmed by our staff shortly.</small>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        
+        <div class="alert alert-info">
+          <p><i class="fas fa-info-circle me-2"></i>A confirmation email has been sent to your registered email address.</p>
+        </div>
+        
+        <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+          <a href="/dashboard" class="btn btn-primary">Go to Dashboard</a>
+          <a href="/appointments" class="btn btn-outline-primary">Book Another Appointment</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,97 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <i class="fas fa-paw me-2"></i>PetAdopt
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item">
+          <a class="nav-link <%= currentPath === '/' ? 'active' : '' %>" href="/"><i class="fas fa-home me-1"></i> Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link <%= currentPath.startsWith('/pets') ? 'active' : '' %>" href="/pets"><i class="fas fa-dog me-1"></i> Adopt</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link <%= currentPath.startsWith('/products') ? 'active' : '' %>" href="/products"><i class="fas fa-shopping-bag me-1"></i> Shop</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link <%= currentPath.startsWith('/appointments') ? 'active' : '' %>" href="/appointments"><i class="fas fa-stethoscope me-1"></i> Vet Services</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link <%= currentPath === '/about' ? 'active' : '' %>" href="/about"><i class="fas fa-info-circle me-1"></i> About</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link <%= currentPath === '/contact' ? 'active' : '' %>" href="/contact"><i class="fas fa-envelope me-1"></i> Contact</a>
+        </li>
+      </ul>
+      <ul class="navbar-nav">
+        <% if(typeof currentUser !== 'undefined' && currentUser) { %>
+          <li class="nav-item me-2">
+            <a class="nav-link position-relative <%= currentPath.startsWith('/cart') ? 'active' : '' %>" href="/cart">
+              <i class="fas fa-shopping-cart"></i>
+              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger cart-count">
+                0
+                <span class="visually-hidden">items in cart</span>
+              </span>
+            </a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+              <i class="fas fa-user-circle me-1"></i> <%= currentUser.name %>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" href="/dashboard"><i class="fas fa-tachometer-alt me-1"></i> Dashboard</a></li>
+              <li><a class="dropdown-item" href="/auth/profile"><i class="fas fa-user-cog me-1"></i> Profile</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="/auth/logout"><i class="fas fa-sign-out-alt me-1"></i> Logout</a></li>
+            </ul>
+          </li>
+        <% } else { %>
+          <li class="nav-item me-2">
+            <a class="nav-link position-relative <%= currentPath.startsWith('/cart') ? 'active' : '' %>" href="/cart">
+              <i class="fas fa-shopping-cart"></i>
+              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger cart-count">
+                0
+                <span class="visually-hidden">items in cart</span>
+              </span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link <%= currentPath.startsWith('/auth/login') ? 'active' : '' %>" href="/auth/login"><i class="fas fa-sign-in-alt me-1"></i> Login</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link <%= currentPath.startsWith('/auth/register') ? 'active' : '' %>" href="/auth/register"><i class="fas fa-user-plus me-1"></i> Register</a>
+          </li>
+        <% } %>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<script>
+  // Update cart count in navbar when the page loads
+  document.addEventListener('DOMContentLoaded', function() {
+    updateCartCount();
+  });
+
+  // Function to update cart count
+  function updateCartCount() {
+    fetch('/cart/count')
+      .then(response => response.json())
+      .then(data => {
+        const cartCountElements = document.querySelectorAll('.cart-count');
+        cartCountElements.forEach(element => {
+          element.textContent = data.count;
+          if (data.count === 0) {
+            element.classList.add('d-none');
+          } else {
+            element.classList.remove('d-none');
+          }
+        });
+      })
+      .catch(error => console.error('Error fetching cart count:', error));
+  }
+</script>

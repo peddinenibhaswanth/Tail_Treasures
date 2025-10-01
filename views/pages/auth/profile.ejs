@@ -1,0 +1,287 @@
+<div class="row">
+  <div class="col-md-4 mb-4">
+    <div class="card">
+      <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">Profile Information</h5>
+      </div>
+      <div class="card-body text-center">
+        <img src="<%= user.profileImage %>" alt="<%= user.name %>" class="rounded-circle img-thumbnail mb-3" style="width: 150px; height: 150px; object-fit: cover;">
+        <h4><%= user.name %></h4>
+        <p class="text-muted">
+          <% if (user.role === 'customer') { %>
+            <span class="badge bg-info">Customer</span>
+          <% } else if (user.role === 'seller') { %>
+            <span class="badge bg-success">Seller</span>
+          <% } else if (user.role === 'veterinary') { %>
+            <span class="badge bg-warning">Veterinary</span>
+          <% } else if (user.role === 'admin') { %>
+            <span class="badge bg-danger">Admin</span>
+          <% } %>
+        </p>
+        <p><i class="fas fa-envelope me-2"></i><%= user.email %></p>
+        <% if (user.phone) { %>
+          <p><i class="fas fa-phone me-2"></i><%= user.phone %></p>
+        <% } %>
+      </div>
+    </div>
+  </div>
+  
+  <div class="col-md-8">
+    <div class="card mb-4">
+      <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">Edit Profile</h5>
+      </div>
+      <div class="card-body">
+        <form action="/auth/profile" method="POST" enctype="multipart/form-data">
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="name" class="form-label">Full Name</label>
+              <input type="text" class="form-control" id="name" name="name" value="<%= user.name %>" required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="phone" class="form-label">Phone Number</label>
+              <input type="text" class="form-control" id="phone" name="phone" value="<%= user.phone || '' %>">
+            </div>
+          </div>
+          
+          <div class="mb-3">
+            <label for="profileImage" class="form-label">Profile Image</label>
+            <input type="file" class="form-control" id="profileImage" name="profileImage" accept="image/*">
+          </div>
+          
+          <h5 class="mt-4">Address Information</h5>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="street" class="form-label">Street</label>
+              <input type="text" class="form-control" id="street" name="street" value="<%= user.address ? user.address.street : '' %>">
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="city" class="form-label">City</label>
+              <input type="text" class="form-control" id="city" name="city" value="<%= user.address ? user.address.city : '' %>">
+            </div>
+          </div>
+          
+          <div class="row">
+            <div class="col-md-4 mb-3">
+              <label for="state" class="form-label">State</label>
+              <input type="text" class="form-control" id="state" name="state" value="<%= user.address ? user.address.state : '' %>">
+            </div>
+            <div class="col-md-4 mb-3">
+              <label for="zipCode" class="form-label">Zip Code</label>
+              <input type="text" class="form-control" id="zipCode" name="zipCode" value="<%= user.address ? user.address.zipCode : '' %>">
+            </div>
+            <div class="col-md-4 mb-3">
+              <label for="country" class="form-label">Country</label>
+              <input type="text" class="form-control" id="country" name="country" value="<%= user.address ? user.address.country : '' %>">
+            </div>
+          </div>
+          
+          <% if (user.role === 'seller') { %>
+            <h5 class="mt-4">Seller Information</h5>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="businessName" class="form-label">Business Name</label>
+                <input type="text" class="form-control" id="businessName" name="businessName" value="<%= user.sellerInfo ? user.sellerInfo.businessName : '' %>">
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="website" class="form-label">Website</label>
+                <input type="text" class="form-control" id="website" name="website" value="<%= user.sellerInfo ? user.sellerInfo.website : '' %>">
+              </div>
+            </div>
+            <div class="mb-3">
+              <label for="description" class="form-label">Business Description</label>
+              <textarea class="form-control" id="description" name="description" rows="3"><%= user.sellerInfo ? user.sellerInfo.description : '' %></textarea>
+            </div>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="businessAddress" class="form-label">Business Address</label>
+                <input type="text" class="form-control" id="businessAddress" name="businessAddress" value="<%= user.sellerInfo ? user.sellerInfo.businessAddress : '' %>">
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="taxId" class="form-label">Tax ID</label>
+                <input type="text" class="form-control" id="taxId" name="taxId" value="<%= user.sellerInfo ? user.sellerInfo.taxId : '' %>">
+              </div>
+            </div>
+            <div class="mb-3">
+              <label for="yearsInBusiness" class="form-label">Years in Business</label>
+              <input type="number" class="form-control" id="yearsInBusiness" name="yearsInBusiness" value="<%= user.sellerInfo ? user.sellerInfo.yearsInBusiness : '' %>">
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Product Categories</label>
+              <div class="row">
+                <% 
+                  const categories = ['Food', 'Toys', 'Accessories', 'Health', 'Grooming', 'Bedding', 'Clothing', 'Other'];
+                  const selectedCategories = user.sellerInfo && user.sellerInfo.productCategories ? user.sellerInfo.productCategories : [];
+                %>
+                <% categories.forEach(category => { %>
+                  <div class="col-md-3 mb-2">
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="<%= category.toLowerCase() %>" name="productCategories" value="<%= category.toLowerCase() %>" <%= selectedCategories.includes(category.toLowerCase()) ? 'checked' : '' %>>
+                      <label class="form-check-label" for="<%= category.toLowerCase() %>"><%= category %></label>
+                    </div>
+                  </div>
+                <% }); %>
+              </div>
+            </div>
+          <% } else if (user.role === 'veterinary') { %>
+            <h5 class="mt-4">Veterinary Information</h5>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="licenseNumber" class="form-label">License Number</label>
+                <input type="text" class="form-control" id="licenseNumber" name="licenseNumber" value="<%= user.vetInfo ? user.vetInfo.licenseNumber : '' %>">
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="specialization" class="form-label">Specialization</label>
+                <input type="text" class="form-control" id="specialization" name="specialization" value="<%= user.vetInfo ? user.vetInfo.specialization : '' %>">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="experience" class="form-label">Years of Experience</label>
+                <input type="number" class="form-control" id="experience" name="experience" value="<%= user.vetInfo ? user.vetInfo.experience : '' %>">
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="education" class="form-label">Education</label>
+                <input type="text" class="form-control" id="education" name="education" value="<%= user.vetInfo ? user.vetInfo.education : '' %>">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="clinicName" class="form-label">Clinic Name</label>
+                <input type="text" class="form-control" id="clinicName" name="clinicName" value="<%= user.vetInfo ? user.vetInfo.clinicName : '' %>">
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="clinicAddress" class="form-label">Clinic Address</label>
+                <input type="text" class="form-control" id="clinicAddress" name="clinicAddress" value="<%= user.vetInfo ? user.vetInfo.clinicAddress : '' %>">
+              </div>
+            </div>
+            <div class="mb-3">
+              <label for="certifications" class="form-label">Certifications (comma separated)</label>
+              <input type="text" class="form-control" id="certifications" name="certifications" value="<%= user.vetInfo && user.vetInfo.certifications ? user.vetInfo.certifications.join(', ') : '' %>">
+            </div>
+            <div class="mb-3">
+              <label for="bio" class="form-label">Professional Bio</label>
+              <textarea class="form-control" id="bio" name="bio" rows="3"><%= user.vetInfo ? user.vetInfo.bio : '' %></textarea>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Available Days</label>
+              <div class="row">
+                <% 
+                  const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+                  const availableDays = user.vetInfo ? user.vetInfo.availableDays : [];
+                %>
+                <% days.forEach(day => { %>
+                  <div class="col-md-3 mb-2">
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="<%= day.toLowerCase() %>" name="availableDays" value="<%= day %>" <%= availableDays.includes(day) ? 'checked' : '' %>>
+                      <label class="form-check-label" for="<%= day.toLowerCase() %>"><%= day %></label>
+                    </div>
+                  </div>
+                <% }); %>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="startTime" class="form-label">Start Time</label>
+                <input type="time" class="form-control" id="startTime" name="startTime" value="<%= user.vetInfo && user.vetInfo.availableHours ? user.vetInfo.availableHours.start : '' %>">
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="endTime" class="form-label">End Time</label>
+                <input type="time" class="form-control" id="endTime" name="endTime" value="<%= user.vetInfo && user.vetInfo.availableHours ? user.vetInfo.availableHours.end : '' %>">
+              </div>
+            </div>
+          <% } %>
+          
+          <div class="d-grid mt-4">
+            <button type="submit" class="btn btn-primary">Update Profile</button>
+          </div>
+          
+          <!-- Add Delete Account Section -->
+          <hr class="my-4">
+          <div class="card border-danger mb-4">
+            <div class="card-header bg-danger text-white">
+              <h5 class="mb-0">Danger Zone</h5>
+            </div>
+            <div class="card-body">
+              <h6>Delete Account</h6>
+              <p class="text-muted">Once you delete your account, there is no going back. Please be certain.</p>
+              <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteAccountModal">
+                <i class="fas fa-trash-alt me-2"></i>Delete My Account
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">Change Password</h5>
+      </div>
+      <div class="card-body">
+        <form action="/auth/change-password" method="POST">
+          <div class="mb-3">
+            <label for="currentPassword" class="form-label">Current Password</label>
+            <input type="password" class="form-control" id="currentPassword" name="currentPassword" required>
+          </div>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="newPassword" class="form-label">New Password</label>
+              <input type="password" class="form-control" id="newPassword" name="newPassword" required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="confirmPassword" class="form-label">Confirm New Password</label>
+              <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
+            </div>
+          </div>
+          <div class="d-grid">
+            <button type="submit" class="btn btn-primary">Change Password</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  </div>
+  
+  <!-- Delete Account Modal -->
+  <div class="modal fade" id="deleteAccountModal" tabindex="-1" aria-labelledby="deleteAccountModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteAccountModalLabel">Confirm Account Deletion</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p class="text-danger fw-bold">Warning: This action cannot be undone.</p>
+          <p>Are you sure you want to permanently delete your account? All your data, including:</p>
+          <ul>
+            <% if (user.role === 'customer') { %>
+              <li>Your adoption applications</li>
+              <li>Your order history</li>
+              <li>Your saved favorites</li>
+            <% } else if (user.role === 'seller') { %>
+              <li>Your product listings</li>
+              <li>Your sales history</li>
+            <% } else if (user.role === 'veterinary') { %>
+              <li>Your appointment history</li>
+              <li>Your client records</li>
+            <% } %>
+            <li>Your profile information</li>
+          </ul>
+          <p>will be permanently deleted.</p>
+          
+          <form id="deleteAccountForm" action="/auth/delete-account?_method=DELETE" method="POST">
+            <div class="mb-3">
+              <label for="currentPasswordDelete" class="form-label">Please enter your password to confirm:</label>
+              <input type="password" class="form-control" id="currentPasswordDelete" name="currentPassword" required>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" form="deleteAccountForm" class="btn btn-danger">Delete My Account</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  

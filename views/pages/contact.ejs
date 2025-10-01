@@ -1,0 +1,269 @@
+<div class="container" style="font-family: 'Open Sans', sans-serif;">
+  <!-- Hero Section -->
+  <div class="row mb-5">
+    <div class="col-12">
+      <div class="card border-0 shadow-lg" style="border-radius: 20px; overflow: hidden;">
+        <div class="card-body p-0">
+          <div style="position: relative;">
+            <img src="/images/contact-hero.jpg" alt="Happy woman with dog" class="img-fluid w-100" style="height: 300px; object-fit: cover;" onerror="this.src='https://images.unsplash.com/photo-1583337130417-3346a1be7dee?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'">
+            <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.3);"></div>
+            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; width: 100%;">
+              <h1 class="display-4 fw-bold text-white" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">Contact Us</h1>
+              <p class="lead text-white" style="font-size: 1.5rem; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); max-width: 700px; margin: 0 auto;">We're here to help! Reach out with any questions about pets, products, or services.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="row">
+    <div class="col-lg-8 offset-lg-2">
+      <!-- Contact Form & Info -->
+      <div class="card mb-5 border-0 shadow-sm" style="border-radius: 15px;">
+        <div class="card-body p-5">
+          <div class="row">
+            <!-- Contact Form -->
+            <div class="col-md-6 mb-4 mb-md-0">
+              <h2 class="fw-bold mb-4" style="color: #2c3e50;">Send Us a Message</h2>
+              <form action="/contact" method="POST" class="needs-validation" novalidate>
+                <div class="mb-3">
+                  <label for="name" class="form-label fw-bold">Your Name</label>
+                  <input type="text" class="form-control py-3" id="name" name="name" placeholder="John Doe" required style="border-radius: 10px; border: 1px solid #ced4da;">
+                  <div class="invalid-feedback">
+                    Please provide your name.
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <label for="email" class="form-label fw-bold">Email Address</label>
+                  <input type="email" class="form-control py-3" id="email" name="email" placeholder="example@email.com" required style="border-radius: 10px; border: 1px solid #ced4da;">
+                  <div class="invalid-feedback">
+                    Please provide a valid email.
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <label for="subject" class="form-label fw-bold">Subject</label>
+                  <select class="form-select py-3" id="subject" name="subject" required style="border-radius: 10px; border: 1px solid #ced4da;">
+                    <option value="" selected disabled>Select a subject</option>
+                    <option value="Adoption">Adoption Inquiry</option>
+                    <option value="Products">Product Question</option>
+                    <option value="Veterinary">Veterinary Services</option>
+                    <option value="Partnership">Partnership Opportunity</option>
+                    <option value="Other">Other</option>
+                  </select>
+                  <div class="invalid-feedback">
+                    Please select a subject.
+                  </div>
+                </div>
+                <div class="mb-4">
+                  <label for="message" class="form-label fw-bold">Message</label>
+                  <textarea class="form-control" id="message" name="message" rows="5" placeholder="Type your message here..." required style="border-radius: 10px; border: 1px solid #ced4da;"></textarea>
+                  <div class="invalid-feedback">
+                    Please enter your message.
+                  </div>
+                </div>
+                <div class="d-grid">
+                  <button type="submit" class="btn btn-primary py-3 fw-bold" style="border-radius: 12px; font-size: 1.1rem;">
+                    <i class="fas fa-paper-plane me-2"></i> Send Message
+                  </button>
+                </div>
+              </form>
+            </div>
+            
+            <!-- Contact Information -->
+            <div class="col-md-6">
+              <h2 class="fw-bold mb-4" style="color: #2c3e50;">Contact Information</h2>
+              
+              <div class="d-flex align-items-start mb-4">
+                <div class="me-3" style="width: 50px; height: 50px; background-color: #e3f2fd; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                  <i class="fas fa-map-marker-alt fa-lg" style="color: #1976d2;"></i>
+                </div>
+                <div>
+                  <h5 class="fw-bold mb-1" style="color: #1976d2;">Our Location</h5>
+                  <p class="mb-0">630 Gnan Marg<br>IIIT SRICITY, AP 515646</p>
+                </div>
+              </div>
+              
+              <div class="d-flex align-items-start mb-4">
+                <div class="me-3" style="width: 50px; height: 50px; background-color: #e8f5e9; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                  <i class="fas fa-phone fa-lg" style="color: #388e3c;"></i>
+                </div>
+                <div>
+                  <h5 class="fw-bold mb-1" style="color: #388e3c;">Phone Numbers</h5>
+                  <p class="mb-1">Adoptions: (123) 456-7890</p>
+                  <p class="mb-0">Customer Service: 9898989898</p>
+                </div>
+              </div>
+              
+              <div class="d-flex align-items-start mb-4">
+                <div class="me-3" style="width: 50px; height: 50px; background-color: #fff3e0; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                  <i class="fas fa-envelope fa-lg" style="color: #e65100;"></i>
+                </div>
+                <div>
+                  <h5 class="fw-bold mb-1" style="color: #e65100;">Email Addresses</h5>
+                  <p class="mb-1">General: info@petadopt.com</p>
+                  <p class="mb-0">Support: support@petadopt.com</p>
+                </div>
+              </div>
+              
+              <div class="d-flex align-items-start mb-4">
+                <div class="me-3" style="width: 50px; height: 50px; background-color: #f3e5f5; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                  <i class="fas fa-clock fa-lg" style="color: #7b1fa2;"></i>
+                </div>
+                <div>
+                  <h5 class="fw-bold mb-1" style="color: #7b1fa2;">Business Hours</h5>
+                  <p class="mb-1">Monday - Friday: 9am - 5pm</p>
+                  <p class="mb-0">Saturday: 10am - 2pm</p>
+                </div>
+              </div>
+              
+              <h4 class="fw-bold mt-5 mb-3" style="color: #2c3e50;">Follow Us</h4>
+              <div class="social-icons d-flex gap-3 mb-4">
+                <a href="https://facebook.com" class="text-decoration-none" style="width: 45px; height: 45px; background-color: #e3f2fd; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                  <i class="fab fa-facebook-f fa-lg" style="color: #1976d2;"></i>
+                </a>
+                <a href="https://twitter.com" class="text-decoration-none" style="width: 45px; height: 45px; background-color: #e3f2fd; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                  <i class="fab fa-twitter fa-lg" style="color: #1976d2;"></i>
+                </a>
+                <a href="https://instagram.com" class="text-decoration-none" style="width: 45px; height: 45px; background-color: #e3f2fd; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                  <i class="fab fa-instagram fa-lg" style="color: #1976d2;"></i>
+                </a>
+                <a href="https://youtube.com" class="text-decoration-none" style="width: 45px; height: 45px; background-color: #e3f2fd; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                  <i class="fab fa-youtube fa-lg" style="color: #1976d2;"></i>
+                </a>
+              </div>
+              
+              <h4 class="fw-bold mb-3" style="color: #2c3e50;">Our Location</h4>
+              <div class="map-container rounded overflow-hidden shadow-sm" style="height: 200px;">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3880.676959374352!2d80.02531811480075!3d13.496464990514898!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a4dded4b0b6f7c5%3A0x5f8a8b0e6f7f9b9f!2sIndian%20Institute%20of%20Information%20Technology%20Sri%20City!5e0!3m2!1sen!2sin!4v1634567890123" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- FAQ Section -->
+      <div class="card border-0 shadow-sm mb-5" style="border-radius: 15px;">
+        <div class="card-body p-5">
+          <h2 class="text-center fw-bold mb-5" style="color: #2c3e50;">Frequently Asked Questions</h2>
+          
+          <div class="accordion" id="faqAccordion">
+            <div class="accordion-item mb-3 border-0" style="border-radius: 12px !important; overflow: hidden;">
+              <h2 class="accordion-header" id="headingOne">
+                <button class="accordion-button fw-bold py-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne" style="background-color: #f8f9fa; color: #2c3e50;">
+                  <i class="fas fa-paw me-3" style="color: #e65100;"></i> How do I adopt a pet?
+                </button>
+              </h2>
+              <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#faqAccordion">
+                <div class="accordion-body" style="background-color: #f8f9fa;">
+                  To adopt a pet through PetAdopt, follow these steps:
+                  <ol class="mt-2">
+                    <li>Browse our available pets and create an account</li>
+                    <li>Submit an adoption application for the pet you're interested in</li>
+                    <li>The shelter will review your application (typically within 48 hours)</li>
+                    <li>If approved, schedule a meet-and-greet with the pet</li>
+                    <li>Complete the adoption paperwork and bring your new friend home!</li>
+                  </ícia
+                </div>
+              </div>
+            </div>
+            
+            <div class="accordion-item mb-3 border-0" style="border-radius: 12px !important; overflow: hidden;">
+              <h2 class="accordion-header" id="headingTwo">
+                <button class="accordion-button collapsed fw-bold py-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo" style="background-color: #f8f9fa; color: #2c3e50;">
+                  <i class="fas fa-store me-3" style="color: #388e3c;"></i> How do I become a seller on PetAdopt?
+                </button>
+              </h2>
+              <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#faqAccordion">
+                <div class="accordion-body" style="background-color: #f8f9fa;">
+                  We welcome quality pet product sellers to join our marketplace:
+                  <ul class="mt-2">
+                    <li>Register for an account and select "Product Seller" as your account type</li>
+                    <li>Complete your seller profile with business information and documentation</li>
+                    <li>Our team will review your application within 2 business days</li>
+                    <li>Once approved, you can set up your product listings</li>
+                  </ul>
+                  All products must meet our quality standards and pet safety guidelines.
+                </div>
+              </div>
+            </div>
+            
+            <div class="accordion-item mb-3 border-0" style="border-radius: 12px !important; overflow: hidden;">
+              <h2 class="accordion-header" id="headingThree">
+                <button class="accordion-button collapsed fw-bold py-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree" style="background-color: #f8f9fa; color: #2c3e50;">
+                  <i class="fas fa-exchange-alt me-3" style="color: #1976d2;"></i> What is your return policy for products?
+                </button>
+              </h2>
+              <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#faqAccordion">
+                <div class="accordion-body" style="background-color: #f8f9fa;">
+                  Our customer-friendly return policy includes:
+                  <ul class="mt-2">
+                    <li><strong>30-day returns</strong> for most products in original condition</li>
+                    <li><strong>Free return shipping</strong> on defective items</li>
+                    <li><strong>Food and treats</strong> may only be returned if unopened and undamaged</li>
+                    <li><strong>Custom/hygiene items</strong> (like personalized tags or grooming tools) are non-returnable</li>
+                  </ul>
+                  To initiate a return, visit your order history in your account dashboard.
+                </div>
+              </div>
+            </div>
+            
+            <div class="accordion-item mb-3 border-0" style="border-radius: 12px !important; overflow: hidden;">
+              <h2 class="accordion-header" id="headingFour">
+                <button class="accordion-button collapsed fw-bold py-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour" style="background-color: #f8f9fa; color: #2c3e50;">
+                  <i class="fas fa-calendar-alt me-3" style="color: #7b1fa2;"></i> How do I cancel or reschedule a vet appointment?
+                </button>
+              </h2>
+              <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#faqAccordion">
+                <div class="accordion-body" style="background-color: #f8f9fa;">
+                  Managing your vet appointments is easy:
+                  <ol class="mt-2">
+                    <li>Log in to your PetAdopt account</li>
+                    <li>Navigate to "My Appointments" in your dashboard</li>
+                    <li>Find the appointment you want to modify</li>
+                    <li>Select "Reschedule" or "Cancel" and follow the prompts</li>
+                  </ol>
+                  <div class="alert alert-warning mt-3" style="border-radius: 10px;">
+                    <i class="fas fa-exclamation-circle me-2"></i> Please provide at least 24 hours notice for cancellations to avoid late cancellation fees.
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- <div class="text-center mt-4">
+              <p class="mb-3">Didn't find your answer?</p>
+              <a href="#contact-form" class="btn btn-outline-primary px-4 py-2" style="border-radius: 12px;">
+                <i class="fas fa-envelope me-2"></i> Ask Your Question
+              </a>
+            </div> -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Form Validation Script -->
+<script>
+// Example starter JavaScript for disabling form submissions if there are invalid fields
+(function () {
+  'use strict'
+
+  // Fetch all the forms we want to apply custom Bootstrap validation styles to
+  var forms = document.querySelectorAll('.needs-validation')
+
+  // Loop over them and prevent submission
+  Array.prototype.slice.call(forms)
+    .forEach(function (form) {
+      form.addEventListener('submit', function (event) {
+        if (!form.checkValidity()) {
+          event.preventDefault()
+          event.stopPropagation()
+        }
+
+        form.classList.add('was-validated')
+      }, false)
+    })
+})();
+</script>

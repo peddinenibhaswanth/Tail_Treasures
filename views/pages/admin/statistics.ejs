@@ -1,0 +1,334 @@
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<div class="container-fluid py-4">
+  <h1 class="h3 mb-4">Dashboard Statistics</h1>
+  
+  <div class="row">
+    <!-- User Stats Card -->
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-left-primary shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                Total Users</div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800"><%= stats.userCount %></div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-users fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer bg-transparent">
+          <div class="row">
+            <div class="col-4 text-center">
+              <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Customers</div>
+              <div class="h6 mb-0 font-weight-bold text-gray-800"><%= stats.customerCount %></div>
+            </div>
+            <div class="col-4 text-center">
+              <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Sellers</div>
+              <div class="h6 mb-0 font-weight-bold text-gray-800"><%= stats.sellerCount %></div>
+            </div>
+            <div class="col-4 text-center">
+              <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Vets</div>
+              <div class="h6 mb-0 font-weight-bold text-gray-800"><%= stats.vetCount %></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pet Stats Card -->
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-left-success shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                Total Pets</div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800"><%= stats.petCount %></div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-paw fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer bg-transparent">
+          <div class="row">
+            <div class="col-4 text-center">
+              <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Available</div>
+              <div class="h6 mb-0 font-weight-bold text-gray-800"><%= stats.availablePets %></div>
+            </div>
+            <div class="col-4 text-center">
+              <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Pending</div>
+              <div class="h6 mb-0 font-weight-bold text-gray-800"><%= stats.pendingPets %></div>
+            </div>
+            <div class="col-4 text-center">
+              <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Adopted</div>
+              <div class="h6 mb-0 font-weight-bold text-gray-800"><%= stats.adoptedPets %></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Product Stats Card -->
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-left-info shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                Total Products</div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800"><%= stats.productCount %></div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-shopping-basket fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer bg-transparent">
+          <div class="row">
+            <div class="col-6 text-center">
+              <div class="text-xs font-weight-bold text-success text-uppercase mb-1">In Stock</div>
+              <div class="h6 mb-0 font-weight-bold text-gray-800"><%= stats.inStockProducts %></div>
+            </div>
+            <div class="col-6 text-center">
+              <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">Out of Stock</div>
+              <div class="h6 mb-0 font-weight-bold text-gray-800"><%= stats.outOfStockProducts %></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Application Stats Card -->
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-left-warning shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                Total Applications</div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800"><%= stats.applicationCount %></div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-file-alt fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer bg-transparent">
+          <div class="row">
+            <div class="col-4 text-center">
+              <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Submitted</div>
+              <div class="h6 mb-0 font-weight-bold text-gray-800"><%= stats.submittedApplications %></div>
+            </div>
+            <div class="col-4 text-center">
+              <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Under Review</div>
+              <div class="h6 mb-0 font-weight-bold text-gray-800"><%= stats.reviewApplications %></div>
+            </div>
+            <div class="col-4 text-center">
+              <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Approved</div>
+              <div class="h6 mb-0 font-weight-bold text-gray-800"><%= stats.approvedApplications %></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <!-- Monthly Adoption Chart -->
+    <div class="col-xl-8 col-lg-7">
+      <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+          <h6 class="m-0 font-weight-bold text-primary">Monthly Adoptions</h6>
+        </div>
+        <div class="card-body">
+          <div class="chart-area">
+            <canvas id="monthlyAdoptionsChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pet Types Pie Chart -->
+    <div class="col-xl-4 col-lg-5">
+      <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+          <h6 class="m-0 font-weight-bold text-primary">Pet Types</h6>
+        </div>
+        <div class="card-body">
+          <div class="chart-pie pt-4 pb-2">
+            <canvas id="petTypesChart"></canvas>
+          </div>
+          <div class="mt-4 text-center small">
+            <span class="mr-2">
+              <i class="fas fa-circle text-primary"></i> Dogs
+            </span>
+            <span class="mr-2">
+              <i class="fas fa-circle text-success"></i> Cats
+            </span>
+            <span class="mr-2">
+              <i class="fas fa-circle text-info"></i> Birds
+            </span>
+            <span class="mr-2">
+              <i class="fas fa-circle text-warning"></i> Small Animals
+            </span>
+            <span class="mr-2">
+              <i class="fas fa-circle text-danger"></i> Others
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <!-- Recent Users -->
+    <div class="col-lg-6 mb-4">
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">Recent Users</h6>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-bordered" width="100%" cellspacing="0">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Role</th>
+                  <th>Joined</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% recentUsers.forEach(user => { %>
+                  <tr>
+                    <td><a href="/admin/users/<%= user._id %>"><%= user.name %></a></td>
+                    <td><%= user.role.charAt(0).toUpperCase() + user.role.slice(1) %></td>
+                    <td><%= new Date(user.createdAt).toLocaleDateString() %></td>
+                    <td>
+                      <% if (user.isApproved) { %>
+                        <span class="badge bg-success">Approved</span>
+                      <% } else { %>
+                        <span class="badge bg-warning">Pending</span>
+                      <% } %>
+                    </td>
+                  </tr>
+                <% }); %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Orders -->
+    <div class="col-lg-6 mb-4">
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">Recent Orders</h6>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-bordered" width="100%" cellspacing="0">
+              <thead>
+                <tr>
+                  <th>Order ID</th>
+                  <th>Customer</th>
+                  <th>Amount</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% recentOrders.forEach(order => { %>
+                  <tr>
+                    <td><a href="/admin/orders/<%= order._id %>">#<%= order._id.toString().slice(-6) %></a></td>
+                    <td><%= order.customer ? order.customer.name : 'Unknown' %></td>
+                    <td>$<%= order.totalAmount.toFixed(2) %></td>
+                    <td>
+                      <span class="badge bg-<%= order.status === 'placed' ? 'primary' : order.status === 'processing' ? 'info' : order.status === 'shipped' ? 'warning' : order.status === 'delivered' ? 'success' : 'danger' %>">
+                        <%= order.status.charAt(0).toUpperCase() + order.status.slice(1) %>
+                      </span>
+                    </td>
+                  </tr>
+                <% }); %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  // Monthly Adoptions Chart
+  const monthlyAdoptionsCtx = document.getElementById('monthlyAdoptionsChart').getContext('2d');
+  const monthlyAdoptionsChart = new Chart(monthlyAdoptionsCtx, {
+    type: 'line',
+    data: {
+      labels: <%- JSON.stringify(monthlyAdoptionsData.labels) %>,
+      datasets: [{
+        label: 'Adoptions',
+        lineTension: 0.3,
+        backgroundColor: 'rgba(78, 115, 223, 0.05)',
+        borderColor: 'rgba(78, 115, 223, 1)',
+        pointRadius: 3,
+        pointBackgroundColor: 'rgba(78, 115, 223, 1)',
+        pointBorderColor: 'rgba(78, 115, 223, 1)',
+        pointHoverRadius: 3,
+        pointHoverBackgroundColor: 'rgba(78, 115, 223, 1)',
+        pointHoverBorderColor: 'rgba(78, 115, 223, 1)',
+        pointHitRadius: 10,
+        pointBorderWidth: 2,
+        data: <%- JSON.stringify(monthlyAdoptionsData.data) %>
+      }]
+    },
+    options: {
+      maintainAspectRatio: false,
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: {
+            precision: 0
+          }
+        }
+      },
+      plugins: {
+        legend: {
+          display: false
+        }
+      }
+    }
+  });
+
+  // Pet Types Pie Chart
+  const petTypesCtx = document.getElementById('petTypesChart').getContext('2d');
+  const petTypesChart = new Chart(petTypesCtx, {
+    type: 'doughnut',
+    data: {
+      labels: <%- JSON.stringify(petTypesData.labels) %>,
+      datasets: [{
+        data: <%- JSON.stringify(petTypesData.data) %>,
+        backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc', '#f6c23e', '#e74a3b'],
+        hoverBackgroundColor: ['#2e59d9', '#17a673', '#2c9faf', '#dda20a', '#be2617'],
+        hoverBorderColor: 'rgba(234, 236, 244, 1)',
+      }],
+    },
+    options: {
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: false
+        }
+      },
+      cutout: '70%',
+    },
+  });
+</script>
+
+<%- include('../../partials/admin-footer') %>

@@ -1,0 +1,265 @@
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-md-8 offset-md-2">
+      <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+          <h3 class="mb-0">Add New Pet</h3>
+        </div>
+        <div class="card-body">
+          <!-- Error messages -->
+          <% if (errors && errors.length > 0) { %>
+            <div class="alert alert-danger">
+              <ul class="mb-0">
+                <% errors.forEach(error => { %>
+                  <li><%= error %></li>
+                <% }) %>
+              </ul>
+            </div>
+          <% } %>
+          <% if (locals.flash && locals.flash.error) { %>
+            <div class="alert alert-danger"><%= locals.flash.error %></div>
+          <% } %>
+
+          <form id="addPetForm" action="/pets" method="POST" enctype="multipart/form-data">
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label for="name" class="form-label">Pet Name*</label>
+                <input type="text" class="form-control" id="name" name="name" value="<%= formData.name || '' %>" required>
+              </div>
+              <div class="col-md-6">
+                <label for="species" class="form-label">Species*</label>
+                <select class="form-select" id="species" name="species" required>
+                  <option value="" <%= !formData.species ? 'selected' : '' %>>Select species</option>
+                  <option value="dog" <%= formData.species === 'dog' ? 'selected' : '' %>>Dog</option>
+                  <option value="cat" <%= formData.species === 'cat' ? 'selected' : '' %>>Cat</option>
+                  <option value="bird" <%= formData.species === 'bird' ? 'selected' : '' %>>Bird</option>
+                  <option value="rabbit" <%= formData.species === 'rabbit' ? 'selected' : '' %>>Rabbit</option>
+                  <option value="hamster" <%= formData.species === 'hamster' ? 'selected' : '' %>>Hamster</option>
+                  <option value="guinea pig" <%= formData.species === 'guinea pig' ? 'selected' : '' %>>Guinea Pig</option>
+                  <option value="fish" <%= formData.species === 'fish' ? 'selected' : '' %>>Fish</option>
+                  <option value="reptile" <%= formData.species === 'reptile' ? 'selected' : '' %>>Reptile</option>
+                  <option value="other" <%= formData.species === 'other' ? 'selected' : '' %>>Other</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label for="breed" class="form-label">Breed</label>
+                <input type="text" class="form-control" id="breed" name="breed" value="<%= formData.breed || '' %>">
+              </div>
+              <div class="col-md-3">
+                <label for="ageValue" class="form-label">Age Value*</label>
+                <input type="number" class="form-control" id="ageValue" name="ageValue" min="0" value="<%= formData.ageValue || '' %>" required>
+              </div>
+              <div class="col-md-3">
+                <label for="ageUnit" class="form-label">Age Unit*</label>
+                <select class="form-select" id="ageUnit" name="ageUnit" required>
+                  <option value="days" <%= formData.ageUnit === 'days' ? 'selected' : '' %>>Days</option>
+                  <option value="weeks" <%= formData.ageUnit === 'weeks' ? 'selected' : '' %>>Weeks</option>
+                  <option value="months" <%= formData.ageUnit === 'months' ? 'selected' : '' %>>Months</option>
+                  <option value="years" <%= formData.ageUnit === 'years' ? 'selected' : '' %>>Years</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label for="gender" class="form-label">Gender*</label>
+                <select class="form-select" id="gender" name="gender" required>
+                  <option value="" <%= !formData.gender ? 'selected' : '' %>>Select gender</option>
+                  <option value="male" <%= formData.gender === 'male' ? 'selected' : '' %>>Male</option>
+                  <option value="female" <%= formData.gender === 'female' ? 'selected' : '' %>>Female</option>
+                  <option value="unknown" <%= formData.gender === 'unknown' ? 'selected' : '' %>>Unknown</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label for="size" class="form-label">Size*</label>
+                <select class="form-select" id="size" name="size" required>
+                  <option value="" <%= !formData.size ? 'selected' : '' %>>Select size</option>
+                  <option value="small" <%= formData.size === 'small' ? 'selected' : '' %>>Small</option>
+                  <option value="medium" <%= formData.size === 'medium' ? 'selected' : '' %>>Medium</option>
+                  <option value="large" <%= formData.size === 'large' ? 'selected' : '' %>>Large</option>
+                  <option value="extra large" <%= formData.size === 'extra large' ? 'selected' : '' %>>Extra Large</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="description" class="form-label">Description*</label>
+              <textarea class="form-control" id="description" name="description" rows="4" required><%= formData.description || '' %></textarea>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label for="color" class="form-label">Color</label>
+                <input type="text" class="form-control" id="color" name="color" value="<%= formData.color || '' %>">
+              </div>
+              <div class="col-md-6">
+                <label for="adoptionFee" class="form-label">Adoption Fee ($)*</label>
+                <input type="number" class="form-control" id="adoptionFee" name="adoptionFee" min="0" step="0.01" value="<%= formData.adoptionFee || '0' %>">
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="images" class="form-label">Pet Images (Max 5)*</label>
+              <input type="file" class="form-control" id="images" name="images" multiple accept="image/*" required>
+              <small class="text-muted">Upload up to 5 images (jpg, png, gif; max 5MB each). First image will be the main display image.</small>
+            </div>
+
+            <div class="mb-4">
+              <label class="form-label">Health Information</label>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="vaccinated" name="vaccinated" <%= formData.vaccinated ? 'checked' : '' %>>
+                <label class="form-check-label" for="vaccinated">Vaccinated</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="neutered" name="neutered" <%= formData.neutered ? 'checked' : '' %>>
+                <label class="form-check-label" for="neutered">Neutered/Spayed</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="microchipped" name="microchipped" <%= formData.microchipped ? 'checked' : '' %>>
+                <label class="form-check-label" for="microchipped">Microchipped</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="specialNeeds" name="specialNeeds" <%= formData.specialNeeds ? 'checked' : '' %>>
+                <label class="form-check-label" for="specialNeeds">Special Needs</label>
+              </div>
+              
+            </div>
+
+            <div class="mb-4">
+              <label class="form-label">Behavior</label>
+              <div class="row">
+                <div class="col-md-4">
+                  <label for="energyLevel" class="form-label">Energy Level</label>
+                  <select class="form-select" id="energyLevel" name="energyLevel">
+                    <option value="low" <%= formData.energyLevel === 'low' ? 'selected' : '' %>>Low</option>
+                    <option value="medium" <%= formData.energyLevel === 'medium' ? 'selected' : '' %>>Medium</option>
+                    <option value="high" <%= formData.energyLevel === 'high' ? 'selected' : '' %>>High</option>
+                  </select>
+                </div>
+                <div class="col-md-4">
+                  <label for="trainingLevel" class="form-label">Training Level</label>
+                  <select class="form-select" id="trainingLevel" name="trainingLevel">
+                    <option value="none" <%= formData.trainingLevel === 'none' ? 'selected' : '' %>>None</option>
+                    <option value="basic" <%= formData.trainingLevel === 'basic' ? 'selected' : '' %>>Basic</option>
+                    <option value="well trained" <%= formData.trainingLevel === 'well trained' ? 'selected' : '' %>>Well Trained</option>
+                  </select>
+                </div>
+                <div class="col-md-4">
+                  <label for="socialness" class="form-label">Socialness</label>
+                  <select class="form-select" id="socialness" name="socialness">
+                    <option value="shy" <%= formData.socialness === 'shy' ? 'selected' : '' %>>Shy</option>
+                    <option value="moderate" <%= formData.socialness === 'moderate' ? 'selected' : '' %>>Moderate</option>
+                    <option value="social" <%= formData.socialness === 'social' ? 'selected' : '' %>>Social</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-4">
+              <label class="form-label">Good With</label>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="goodWithChildren" name="goodWithChildren" <%= formData.goodWithChildren ? 'checked' : '' %>>
+                <label class="form-check-label" for="goodWithChildren">Children</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="goodWithDogs" name="goodWithDogs" <%= formData.goodWithDogs ? 'checked' : '' %>>
+                <label class="form-check-label" for="goodWithDogs">Dogs</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="goodWithCats" name="goodWithCats" <%= formData.goodWithCats ? 'checked' : '' %>>
+                <label class="form-check-label" for="goodWithCats">Cats</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="goodWithOtherAnimals" name="goodWithOtherAnimals" <%= formData.goodWithOtherAnimals ? 'checked' : '' %>>
+                <label class="form-check-label" for="goodWithOtherAnimals">Other Animals</label>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="status" class="form-label">Adoption Status*</label>
+              <select class="form-select" id="status" name="status" required>
+                <option value="available" <%= formData.status === 'available' ? 'selected' : '' %>>Available</option>
+                <option value="pending" <%= formData.status === 'pending' ? 'selected' : '' %>>Pending</option>
+                <option value="adopted" <%= formData.status === 'adopted' ? 'selected' : '' %>>Adopted</option>
+              </select>
+            </div>
+
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+              <a href="/admin/pets" class="btn btn-secondary me-md-2">Cancel</a>
+              <button type="submit" class="btn btn-primary" id="submitBtn">
+                <span id="submitText">Add Pet</span>
+                <span id="spinner" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Show/hide special needs description
+  document.getElementById('specialNeeds').addEventListener('change', function() {
+    document.getElementById('specialNeedsDescriptionContainer').style.display = this.checked ? 'block' : 'none';
+  });
+
+  // Form submission with AJAX
+  document.getElementById('addPetForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const submitBtn = document.getElementById('submitBtn');
+    const submitText = document.getElementById('submitText');
+    const spinner = document.getElementById('spinner');
+    const errorContainer = document.createElement('div');
+
+    // Show spinner
+    submitBtn.disabled = true;
+    submitText.classList.add('d-none');
+    spinner.classList.remove('d-none');
+
+    try {
+      const formData = new FormData(this);
+      const response = await fetch('/pets', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const contentType = response.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        throw new Error('Unexpected response from server');
+      }
+
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.errors?.join(', ') || 'Failed to add pet');
+      }
+
+      if (data.success) {
+        window.location.href = `/pets/${data.petId}`;
+      } else {
+        throw new Error(data.errors?.join(', ') || 'Failed to add pet');
+      }
+    } catch (err) {
+      // Display error
+      errorContainer.className = 'alert alert-danger mt-3';
+      errorContainer.textContent = err.message;
+      this.insertBefore(errorContainer, this.firstChild);
+      // Scroll to top
+      window.scrollTo(0, 0);
+    } finally {
+      // Hide spinner
+      submitBtn.disabled = false;
+      submitText.classList.remove('d-none');
+      spinner.classList.add('d-none');
+    }
+  });
+</script>
+
+<%- include('../../partials/admin-footer') %>

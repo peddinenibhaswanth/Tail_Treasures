@@ -1,0 +1,349 @@
+<div class="row">
+  <div class="col-md-4">
+    <div class="card mb-4">
+      <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">User Profile</h5>
+      </div>
+      <div class="card-body text-center">
+        <img src="<%= user.profileImage %>" alt="<%= user.name %>" class="rounded-circle img-thumbnail mb-3" style="width: 150px; height: 150px; object-fit: cover;">
+        <h4><%= user.name %></h4>
+        <p class="text-muted">
+          <span class="badge bg-<%= user.role === 'admin' ? 'danger' : user.role === 'seller' ? 'success' : user.role === 'veterinary' ? 'warning' : 'info' %>">
+            <%= user.role.charAt(0).toUpperCase() + user.role.slice(1) %>
+          </span>
+          <% if (user.isApproved) { %>
+            <span class="badge bg-success ms-1">Approved</span>
+          <% } else { %>
+            <span class="badge bg-warning ms-1">Pending</span>
+          <% } %>
+        </p>
+        <p><i class="fas fa-envelope me-2"></i><%= user.email %></p>
+        <% if (user.phone) { %>
+          <p><i class="fas fa-phone me-2"></i><%= user.phone %></p>
+        <% } %>
+        <p><i class="fas fa-calendar me-2"></i>Joined: <%= new Date(user.createdAt).toLocaleDateString() %></p>
+      </div>
+      <div class="card-footer">
+        <div class="d-grid gap-2">
+          <!-- <a href="/admin/users/<%= user._id %>/edit" class="btn btn-primary">Edit User</a> -->
+          <% if (!user.isApproved) { %>
+            <a href="/admin/users/<%= user._id %>/approve" class="btn btn-success">Approve User</a>
+          <% } %>
+          <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteUserModal">Delete User</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="col-md-8">
+    <div class="card mb-4">
+      <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">User Details</h5>
+      </div>
+      <div class="card-body">
+        <h6>Contact Information</h6>
+        <table class="table">
+          <tbody>
+            <tr>
+              <th style="width: 30%;">Email</th>
+              <td><%= user.email %></td>
+            </tr>
+            <tr>
+              <th>Phone</th>
+              <td><%= user.phone || 'Not provided' %></td>
+            </tr>
+          </tbody>
+        </table>
+        
+        <h6 class="mt-4">Address</h6>
+        <% if (user.address && (user.address.street || user.address.city || user.address.state || user.address.zipCode || user.address.country)) { %>
+          <table class="table">
+            <tbody>
+              <tr>
+                <th style="width: 30%;">Street</th>
+                <td><%= user.address.street || 'Not provided' %></td>
+              </tr>
+              <tr>
+                <th>City</th>
+                <td><%= user.address.city || 'Not provided' %></td>
+              </tr>
+              <tr>
+                <th>State</th>
+                <td><%= user.address.state || 'Not provided' %></td>
+              </tr>
+              <tr>
+                <th>Zip Code</th>
+                <td><%= user.address.zipCode || 'Not provided' %></td>
+              </tr>
+              <tr>
+                <th>Country</th>
+                <td><%= user.address.country || 'Not provided' %></td>
+              </tr>
+            </tbody>
+          </table>
+        <% } else { %>
+          <p class="text-muted">No address information provided.</p>
+        <% } %>
+        
+        <% if (user.role === 'seller' && user.sellerInfo) { %>
+          <h6 class="mt-4">Seller Information</h6>
+          <table class="table">
+            <tbody>
+              <tr>
+                <th style="width: 30%;">Business Name</th>
+                <td><%= user.sellerInfo.businessName || 'Not provided' %></td>
+              </tr>
+              <tr>
+                <th>Website</th>
+                <td><%= user.sellerInfo.website || 'Not provided' %></td>
+              </tr>
+              <tr>
+                <th>Description</th>
+                <td><%= user.sellerInfo.description || 'Not provided' %></td>
+              </tr>
+            </tbody>
+          </table>
+        <% } else if (user.role === 'veterinary' && user.vetInfo) { %>
+          <h6 class="mt-4">Veterinary Information</h6>
+          <table class="table">
+            <tbody>
+              <tr>
+                <th style="width: 30%;">License Number</th>
+                <td><%= user.vetInfo.licenseNumber || 'Not provided' %></td>
+              </tr>
+              <tr>
+                <th>Specialization</th>
+                <td><%= user.vetInfo.specialization || 'Not provided' %></td>
+              </tr>
+              <tr>
+                <th>Experience</th>
+                <td><%= user.vetInfo.experience ? `${user.vetInfo.experience} years` : 'Not provided' %></td>
+              </tr>
+              <tr>
+                <th>Education</th>
+                <td><%= user.vetInfo.education || 'Not provided' %></td>
+              </tr>
+              <tr>
+                <th>Bio</th>
+                <td><%= user.vetInfo.bio || 'Not provided' %></td>
+              </tr>
+              <tr>
+                <th>Available Days</th>
+                <td>
+                  <% if (user.vetInfo.availableDays && user.vetInfo.availableDays.length > 0) { %>
+                    <%= user.vetInfo.availableDays.join(', ') %>
+                  <% } else { %>
+                    Not provided
+                  <% } %>
+                </td>
+              </tr>
+              <tr>
+                <th>Working Hours</th>
+                <td>
+                  <% if (user.vetInfo.availableHours && user.vetInfo.availableHours.start && user.vetInfo.availableHours.end) { %>
+                    <%= user.vetInfo.availableHours.start %> - <%= user.vetInfo.availableHours.end %>
+                  <% } else { %>
+                    Not provided
+                  <% } %>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        <% } %>
+      </div>
+    </div>
+    
+    <% if (user.role === 'customer') { %>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+              <h5 class="mb-0">Adoption Applications</h5>
+            </div>
+            <div class="card-body">
+              <% if (applications && applications.length > 0) { %>
+                <div class="list-group">
+                  <% applications.forEach(application => { %>
+                    <a href="/admin/applications/<%= application._id %>" class="list-group-item list-group-item-action">
+                      <div class="d-flex w-100 justify-content-between">
+                        <h6 class="mb-1"><%= application.pet.name %></h6>
+                        <small class="badge bg-<%= application.status === 'submitted' ? 'primary' : application.status === 'under review' ? 'warning' : application.status === 'approved' ? 'success' : 'danger' %>">
+                          <%= application.status.charAt(0).toUpperCase() + application.status.slice(1) %>
+                        </small>
+                      </div>
+                      <p class="mb-1"><small>Applied on <%= new Date(application.createdAt).toLocaleDateString() %></small></p>
+                    </a>
+                  <% }); %>
+                </div>
+              <% } else { %>
+                <p class="text-center">No adoption applications found.</p>
+              <% } %>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-md-6">
+          <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+              <h5 class="mb-0">Orders</h5>
+            </div>
+            <div class="card-body">
+              <% if (orders && orders.length > 0) { %>
+                <div class="list-group">
+                  <% orders.forEach(order => { %>
+                    <a href="/admin/orders/<%= order._id %>" class="list-group-item list-group-item-action">
+                      <div class="d-flex w-100 justify-content-between">
+                        <h6 class="mb-1">Order #<%= order._id.toString().slice(-6) %></h6>
+                        <small class="badge bg-<%= order.status === 'placed' ? 'primary' : order.status === 'processing' ? 'info' : order.status === 'shipped' ? 'warning' : order.status === 'delivered' ? 'success' : 'danger' %>">
+                          <%= order.status.charAt(0).toUpperCase() + order.status.slice(1) %>
+                        </small>
+                      </div>
+                      <p class="mb-1"><small>$<%= order.totalAmount.toFixed(2) %> - <%= new Date(order.createdAt).toLocaleDateString() %></small></p>
+                    </a>
+                  <% }); %>
+                </div>
+              <% } else { %>
+                <p class="text-center">No orders found.</p>
+              <% } %>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% } else if (user.role === 'seller') { %>
+      <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+          <h5 class="mb-0">Products</h5>
+        </div>
+        <div class="card-body">
+          <% if (products && products.length > 0) { %>
+            <div class="table-responsive">
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th>Image</th>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Stock</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% products.forEach(product => { %>
+                    <tr>
+                      <td>
+                        <img src="<%= product.mainImage %>" alt="<%= product.name %>" width="50" height="50" style="object-fit: cover;">
+                      </td>
+                      <td><%= product.name %></td>
+                      <td>
+                        <% if (product.onSale) { %>
+                          <span class="text-decoration-line-through">$<%= product.price.toFixed(2) %></span>
+                          <span class="text-danger">$<%= product.salePrice.toFixed(2) %></span>
+                        <% } else { %>
+                          $<%= product.price.toFixed(2) %>
+                        <% } %>
+                      </td>
+                      <td>
+                        <% if (product.stock > 0) { %>
+                          <%= product.stock %>
+                        <% } else { %>
+                          <span class="text-danger">Out of stock</span>
+                        <% } %>
+                      </td>
+                      <td>
+                        <% if (product.featured) { %>
+                          <span class="badge bg-info">Featured</span>
+                        <% } %>
+                        <% if (product.onSale) { %>
+                          <span class="badge bg-danger">On Sale</span>
+                        <% } %>
+                      </td>
+                      <td>
+                        <div class="btn-group btn-group-sm">
+                          <a href="/admin/products/<%= product._id %>" class="btn btn-outline-primary">View</a>
+                          <a href="/admin/products/<%= product._id %>/edit" class="btn btn-outline-secondary">Edit</a>
+                        </div>
+                      </td>
+                    </tr>
+                  <% }); %>
+                </tbody>
+              </table>
+            </div>
+          <% } else { %>
+            <p class="text-center">No products found.</p>
+          <% } %>
+        </div>
+      </div>
+    <% } else if (user.role === 'veterinary') { %>
+      <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+          <h5 class="mb-0">Appointments</h5>
+        </div>
+        <div class="card-body">
+          <% if (appointments && appointments.length > 0) { %>
+            <div class="table-responsive">
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Pet</th>
+                    <th>Owner</th>
+                    <th>Reason</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% appointments.forEach(appointment => { %>
+                    <tr>
+                      <td><%= new Date(appointment.date).toLocaleDateString() %></td>
+                      <td><%= appointment.time %></td>
+                      <td><%= appointment.petName %> (<%= appointment.petType %>)</td>
+                      <td><%= appointment.customer.name %></td>
+                      <td><%= appointment.reason %></td>
+                      <td>
+                        <span class="badge bg-<%= appointment.status === 'pending' ? 'warning' : appointment.status === 'confirmed' ? 'success' : appointment.status === 'completed' ? 'info' : 'danger' %>">
+                          <%= appointment.status.charAt(0).toUpperCase() + appointment.status.slice(1) %>
+                        </span>
+                      </td>
+                      <td>
+                        <div class="btn-group btn-group-sm">
+                          <a href="/admin/appointments/<%= appointment._id %>" class="btn btn-outline-primary">View</a>
+                        </div>
+                      </td>
+                    </tr>
+                  <% }); %>
+                </tbody>
+              </table>
+            </div>
+          <% } else { %>
+            <p class="text-center">No appointments found.</p>
+          <% } %>
+        </div>
+      </div>
+    <% } %>
+  </div>
+</div>
+
+<!-- Delete User Modal -->
+<div class="modal fade" id="deleteUserModal" tabindex="-1" aria-labelledby="deleteUserModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteUserModalLabel">Confirm Deletion</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to delete the user <strong><%= user.name %></strong>?</p>
+        <p class="text-danger">This action cannot be undone.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <form action="/admin/users/<%= user._id %>?_method=DELETE" method="POST">
+          <button type="submit" class="btn btn-danger">Delete User</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

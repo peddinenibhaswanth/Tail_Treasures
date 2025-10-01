@@ -1,0 +1,118 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-8 offset-md-2">
+      <div class="card">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+          <h4 class="mb-0"><i class="fas fa-calendar-alt me-2"></i>Appointment Details</h4>
+          <span class="badge bg-<%= appointment.status === 'pending' ? 'warning' : appointment.status === 'confirmed' ? 'success' : appointment.status === 'completed' ? 'info' : 'danger' %>">
+            <%= appointment.status.charAt(0).toUpperCase() + appointment.status.slice(1) %>
+          </span>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6">
+              <h5>Appointment Information</h5>
+              <table class="table">
+                <tbody>
+                  <tr>
+                    <th style="width: 40%;">Date</th>
+                    <td><%= new Date(appointment.date).toLocaleDateString() %></td>
+                  </tr>
+                  <tr>
+                    <th>Time</th>
+                    <td><%= appointment.time %></td>
+                  </tr>
+                  <tr>
+                    <th>Pet Name</th>
+                    <td><%= appointment.petName %></td>
+                  </tr>
+                  <tr>
+                    <th>Pet Type</th>
+                    <td><%= appointment.petType.charAt(0).toUpperCase() + appointment.petType.slice(1) %></td>
+                  </tr>
+                  <tr>
+                    <th>Reason</th>
+                    <td><%= appointment.reason.charAt(0).toUpperCase() + appointment.reason.slice(1) %></td>
+                  </tr>
+                  <% if (appointment.notes) { %>
+                    <tr>
+                      <th>Notes</th>
+                      <td><%= appointment.notes %></td>
+                    </tr>
+                  <% } %>
+                </tbody>
+              </table>
+            </div>
+            
+            <div class="col-md-6">
+              <h5>Veterinarian</h5>
+              <div class="card mb-3">
+                <div class="row g-0">
+                  <div class="col-4">
+                    <img src="<%= appointment.veterinary.profileImage %>" class="img-fluid rounded-start" alt="<%= appointment.veterinary.name %>" style="height: 100%; object-fit: cover;">
+                  </div>
+                  <div class="col-8">
+                    <div class="card-body">
+                      <h6 class="card-title"><%= appointment.veterinary.name %></h6>
+                      <p class="card-text"><small class="text-muted"><%= appointment.veterinary.vetInfo.specialization %></small></p>
+                      <p class="card-text"><small><i class="fas fa-envelope me-1"></i><%= appointment.veterinary.email %></small></p>
+                      <% if (appointment.veterinary.phone) { %>
+                        <p class="card-text"><small><i class="fas fa-phone me-1"></i><%= appointment.veterinary.phone %></small></p>
+                      <% } %>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <h5>Customer</h5>
+              <table class="table">
+                <tbody>
+                  <tr>
+                    <th style="width: 40%;">Name</th>
+                    <td><%= appointment.customer.name %></td>
+                  </tr>
+                  <tr>
+                    <th>Email</th>
+                    <td><%= appointment.customer.email %></td>
+                  </tr>
+                  <% if (appointment.customer.phone) { %>
+                    <tr>
+                      <th>Phone</th>
+                      <td><%= appointment.customer.phone %></td>
+                    </tr>
+                  <% } %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          
+          <div class="mt-4">
+            <% if (currentUser._id.toString() === appointment.veterinary._id.toString()) { %>
+              <% if (appointment.status === 'pending') { %>
+                <a href="/dashboard/appointments/<%= appointment._id %>/confirm" class="btn btn-success">
+                  <i class="fas fa-check-circle me-2"></i>Confirm Appointment
+                </a>
+              <% } else if (appointment.status === 'confirmed') { %>
+                <a href="/dashboard/appointments/<%= appointment._id %>/complete" class="btn btn-info">
+                  <i class="fas fa-clipboard-check me-2"></i>Mark as Completed
+                </a>
+              <% } %>
+            <% } %>
+            
+            <% if (appointment.status !== 'cancelled' && appointment.status !== 'completed' && 
+                  (currentUser._id.toString() === appointment.customer._id.toString() || 
+                   currentUser._id.toString() === appointment.veterinary._id.toString())) { %>
+              <a href="/dashboard/appointments/<%= appointment._id %>/cancel" class="btn btn-danger <%= currentUser._id.toString() === appointment.veterinary._id.toString() ? 'ms-2' : '' %>">
+                <i class="fas fa-times-circle me-2"></i>Cancel Appointment
+              </a>
+            <% } %>
+            
+            <a href="/dashboard" class="btn btn-outline-secondary <%= appointment.status !== 'cancelled' && appointment.status !== 'completed' ? 'ms-2' : '' %>">
+              <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

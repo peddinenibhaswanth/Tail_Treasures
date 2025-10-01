@@ -1,0 +1,87 @@
+<div class="container py-5">
+    <div class="row">
+      <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h2><i class="fas fa-chart-line me-2"></i>My Sales</h2>
+          <div>
+            <a href="/dashboard/statistics" class="btn btn-outline-primary me-2">
+              <i class="fas fa-chart-bar me-1"></i> Sales Statistics
+            </a>
+            <a href="/products/new" class="btn btn-primary">
+              <i class="fas fa-plus me-1"></i> Add New Product
+            </a>
+          </div>
+        </div>
+  
+        <% if (orders && orders.length > 0) { %>
+          <div class="card shadow-sm mb-4">
+            <div class="card-body p-0">
+              <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                  <thead class="bg-light">
+                    <tr>
+                      <th>Order #</th>
+                      <th>Date</th>
+                      <th>Customer</th>
+                      <th>Items</th>
+                      <th>Total</th>
+                      <th>Status</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% orders.forEach(order => { %>
+                      <tr>
+                        <td class="fw-bold">#<%= order._id.toString().slice(-6).toUpperCase() %></td>
+                        <td><%= new Date(order.createdAt).toLocaleDateString() %></td>
+                        <td><%= order.customer ? order.customer.name : 'Customer' %></td>
+                        <td>
+                          <% if (order.items.length === 1) { %>
+                            <%= order.items[0].name || (order.items[0].product ? order.items[0].product.name : 'Product') %>
+                          <% } else { %>
+                            <%= order.items[0].name || (order.items[0].product ? order.items[0].product.name : 'Product') %> 
+                            and <%= order.items.length - 1 %> more item(s)
+                          <% } %>
+                        </td>
+                        <td>$<%= order.totalAmount.toFixed(2) %></td>
+                        <td>
+                          <% if (order.status === 'placed') { %>
+                            <span class="badge bg-primary">Placed</span>
+                          <% } else if (order.status === 'processing') { %>
+                            <span class="badge bg-info">Processing</span>
+                          <% } else if (order.status === 'shipped') { %>
+                            <span class="badge bg-warning text-dark">Shipped</span>
+                          <% } else if (order.status === 'delivered') { %>
+                            <span class="badge bg-success">Delivered</span>
+                          <% } else if (order.status === 'cancelled') { %>
+                            <span class="badge bg-danger">Cancelled</span>
+                          <% } %>
+                        </td>
+                        <td>
+                          <a href="/dashboard/sales/<%= order._id %>" class="btn btn-sm btn-outline-primary">
+                            <i class="fas fa-eye"></i> View
+                          </a>
+                        </td>
+                      </tr>
+                    <% }); %>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        <% } else { %>
+          <div class="card shadow-sm">
+            <div class="card-body text-center py-5">
+              <i class="fas fa-chart-line fa-4x text-muted mb-3"></i>
+              <h4>No Sales Yet</h4>
+              <p class="text-muted">You haven't made any sales yet.</p>
+              <a href="/products/new" class="btn btn-primary mt-3">
+                <i class="fas fa-plus me-2"></i>Add New Product
+              </a>
+            </div>
+          </div>
+        <% } %>
+      </div>
+    </div>
+  </div>
+  

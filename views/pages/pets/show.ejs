@@ -1,0 +1,290 @@
+<div class="row">
+  <div class="col-md-8">
+    <div class="card mb-4">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-6">
+            <img
+              src="<%= pet.mainImage %>"
+              class="img-fluid rounded mb-3"
+              alt="<%= pet.name %>"
+            />
+            <% if (pet.images && pet.images.length > 1) { %>
+            <div class="row">
+              <% pet.images.forEach((image, index) => { %> <% if (index > 0) {
+              %>
+              <div class="col-3 mb-2">
+                <img
+                  src="<%= image %>"
+                  class="img-fluid rounded"
+                  alt="<%= pet.name %> image <%= index + 1 %>"
+                />
+              </div>
+              <% } %> <% }); %>
+            </div>
+            <% } %>
+          </div>
+          <div class="col-md-6">
+            <h2>
+              <%= pet.name %>
+              <span
+                class="badge bg-<%= pet.status === 'available' ? 'success' : pet.status === 'pending' ? 'warning' : 'danger' %>"
+                ><%= pet.status.charAt(0).toUpperCase() + pet.status.slice(1)
+                %></span
+              >
+            </h2>
+            <p class="text-muted">
+              <span class="badge bg-primary"
+                ><%= pet.species.charAt(0).toUpperCase() + pet.species.slice(1)
+                %></span
+              >
+              <% if (pet.breed) { %>
+              <span class="badge bg-secondary"><%= pet.breed %></span>
+              <% } %>
+            </p>
+
+            <table class="table">
+              <tbody>
+                <tr>
+                  <th scope="row" style="width: 40%">Age</th>
+                  <td><%= pet.age.value %> <%= pet.age.unit %></td>
+                </tr>
+                <tr>
+                  <th scope="row">Gender</th>
+                  <td>
+                    <%= pet.gender.charAt(0).toUpperCase() + pet.gender.slice(1)
+                    %>
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">Size</th>
+                  <td>
+                    <%= pet.size.charAt(0).toUpperCase() + pet.size.slice(1) %>
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">Color</th>
+                  <td><%= pet.color %></td>
+                </tr>
+                <% if (pet.adoptionFee > 0) { %>
+                <tr>
+                  <th scope="row">Adoption Fee</th>
+                  <td>$<%= pet.adoptionFee.toFixed(2) %></td>
+                </tr>
+                <% } %>
+              </tbody>
+            </table>
+
+            <% if (pet.status === 'available' && typeof currentUser !==
+            'undefined' && currentUser && currentUser.role === 'customer') { %>
+            <% if (!hasApplied) { %>
+            <a
+              href="/pets/<%= pet._id %>/adopt"
+              class="btn btn-primary btn-lg w-100 mb-2"
+            >
+              <i class="fas fa-heart me-2"></i>Apply to Adopt
+            </a>
+            <% } else { %>
+            <button class="btn btn-secondary btn-lg w-100 mb-2" disabled>
+              <i class="fas fa-check-circle me-2"></i>Application Submitted
+            </button>
+            <% } %> <% } else if (pet.status !== 'available') { %>
+            <button class="btn btn-secondary btn-lg w-100 mb-2" disabled>
+              <i class="fas fa-paw me-2"></i>Not Available for Adoption
+            </button>
+            <% } else if (typeof currentUser === 'undefined' || !currentUser) {
+            %>
+            <a href="/auth/login" class="btn btn-primary btn-lg w-100 mb-2">
+              <i class="fas fa-sign-in-alt me-2"></i>Login to Apply
+            </a>
+            <% } %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card mb-4">
+      <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">About <%= pet.name %></h5>
+      </div>
+      <div class="card-body">
+        <p><%= pet.description %></p>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6">
+        <div class="card mb-4">
+          <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Good With</h5>
+          </div>
+          <div class="card-body">
+            <ul class="list-group list-group-flush">
+              <li
+                class="list-group-item d-flex justify-content-between align-items-center"
+              >
+                Children <% if (pet.goodWith.children) { %>
+                <i class="fas fa-check-circle text-success"></i>
+                <% } else { %>
+                <i class="fas fa-times-circle text-danger"></i>
+                <% } %>
+              </li>
+              <li
+                class="list-group-item d-flex justify-content-between align-items-center"
+              >
+                Dogs <% if (pet.goodWith.dogs) { %>
+                <i class="fas fa-check-circle text-success"></i>
+                <% } else { %>
+                <i class="fas fa-times-circle text-danger"></i>
+                <% } %>
+              </li>
+              <li
+                class="list-group-item d-flex justify-content-between align-items-center"
+              >
+                Cats <% if (pet.goodWith.cats) { %>
+                <i class="fas fa-check-circle text-success"></i>
+                <% } else { %>
+                <i class="fas fa-times-circle text-danger"></i>
+                <% } %>
+              </li>
+              <li
+                class="list-group-item d-flex justify-content-between align-items-center"
+              >
+                Other Animals <% if (pet.goodWith.otherAnimals) { %>
+                <i class="fas fa-check-circle text-success"></i>
+                <% } else { %>
+                <i class="fas fa-times-circle text-danger"></i>
+                <% } %>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="card mb-4">
+          <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Health & Behavior</h5>
+          </div>
+          <div class="card-body">
+            <h6>Health Information</h6>
+            <ul class="list-group list-group-flush mb-3">
+              <li
+                class="list-group-item d-flex justify-content-between align-items-center"
+              >
+                Vaccinated <% if (pet.healthInfo.vaccinated) { %>
+                <i class="fas fa-check-circle text-success"></i>
+                <% } else { %>
+                <i class="fas fa-times-circle text-danger"></i>
+                <% } %>
+              </li>
+              <li
+                class="list-group-item d-flex justify-content-between align-items-center"
+              >
+                Neutered/Spayed <% if (pet.healthInfo.neutered) { %>
+                <i class="fas fa-check-circle text-success"></i>
+                <% } else { %>
+                <i class="fas fa-times-circle text-danger"></i>
+                <% } %>
+              </li>
+              <li
+                class="list-group-item d-flex justify-content-between align-items-center"
+              >
+                Microchipped <% if (pet.healthInfo.microchipped) { %>
+                <i class="fas fa-check-circle text-success"></i>
+                <% } else { %>
+                <i class="fas fa-times-circle text-danger"></i>
+                <% } %>
+              </li>
+              <li
+                class="list-group-item d-flex justify-content-between align-items-center"
+              >
+                Special Needs <% if (pet.healthInfo.specialNeeds) { %>
+                <i class="fas fa-check-circle text-success"></i>
+                <% } else { %>
+                <i class="fas fa-times-circle text-danger"></i>
+                <% } %>
+              </li>
+            </ul>
+
+            <% if (pet.healthInfo.specialNeeds &&
+            pet.healthInfo.specialNeedsDescription) { %>
+            <div class="alert alert-info">
+              <strong>Special Needs:</strong> <%=
+              pet.healthInfo.specialNeedsDescription %>
+            </div>
+            <% } %>
+
+            <h6>Behavior</h6>
+            <ul class="list-group list-group-flush">
+              <li
+                class="list-group-item d-flex justify-content-between align-items-center"
+              >
+                Energy Level
+                <span class="badge bg-primary"
+                  ><%= pet.behavior.energyLevel.charAt(0).toUpperCase() +
+                  pet.behavior.energyLevel.slice(1) %></span
+                >
+              </li>
+              <li
+                class="list-group-item d-flex justify-content-between align-items-center"
+              >
+                Training Level
+                <span class="badge bg-primary"
+                  ><%= pet.behavior.trainingLevel.charAt(0).toUpperCase() +
+                  pet.behavior.trainingLevel.slice(1) %></span
+                >
+              </li>
+              <li
+                class="list-group-item d-flex justify-content-between align-items-center"
+              >
+                Socialness
+                <span class="badge bg-primary"
+                  ><%= pet.behavior.socialness.charAt(0).toUpperCase() +
+                  pet.behavior.socialness.slice(1) %></span
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <% if (similarPets && similarPets.length > 0) { %>
+    <div class="card">
+      <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">Similar Pets</h5>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <% similarPets.forEach(similarPet => { %>
+          <div class="col-6 mb-3">
+            <div class="card h-100">
+              <img
+                src="<%= similarPet.mainImage %>"
+                class="card-img-top"
+                alt="<%= similarPet.name %>"
+                style="height: 100px; object-fit: cover"
+              />
+              <div class="card-body p-2">
+                <h6 class="card-title mb-0"><%= similarPet.name %></h6>
+                <p class="card-text mb-1">
+                  <small><%= similarPet.breed %></small>
+                </p>
+                <a
+                  href="/pets/<%= similarPet._id %>"
+                  class="btn btn-sm btn-outline-primary"
+                  >View</a
+                >
+              </div>
+            </div>
+          </div>
+          <% }); %>
+        </div>
+      </div>
+    </div>
+    <% } %>
+  </div>
+</div>

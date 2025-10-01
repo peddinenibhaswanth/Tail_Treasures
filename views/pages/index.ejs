@@ -1,0 +1,179 @@
+<!-- Hero Section -->
+<div class="jumbotron bg-light p-5 rounded-3 mb-5" style="background: linear-gradient(rgba(255,255,255,0.9), rgba(255,255,255,0.9)), url('/images/pets-hero-bg.jpg') center/cover no-repeat;">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-10 text-center">
+        <h1 class="display-4 fw-bold mb-4" style="color: #2c3e50;">Find Your Perfect Companion</h1>
+        <p class="lead mb-4" style="font-size: 1.4rem; color: #4a5568;">Adopt a pet, shop for supplies, or book a vet appointment - all in one place!</p>
+        <hr class="my-4 mx-auto" style="width: 100px; border-top: 3px solid #0d6efd; opacity: 1;">
+        <p class="mb-5" style="font-size: 1.1rem; color: #4a5568;">We connect pets with loving homes and provide everything you need for your furry friends.</p>
+        <div class="d-flex justify-content-center flex-wrap gap-3">
+          <a class="btn btn-primary btn-lg px-4 py-3 fw-bold" href="/pets" role="button" style="border-radius: 12px; min-width: 180px;">
+            <i class="fas fa-paw me-2"></i> Adopt Now
+          </a>
+          <a class="btn btn-outline-primary btn-lg px-4 py-3 fw-bold" href="/products" role="button" style="border-radius: 12px; min-width: 180px;">
+            <i class="fas fa-shopping-cart me-2"></i> Shop Products
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Featured Pets Section -->
+<div class="container mb-5">
+  <div class="row justify-content-center mb-4">
+    <div class="col-lg-8 text-center">
+      <h2 class="fw-bold mb-3" style="color: #2c3e50;">Featured Pets</h2>
+      <p class="lead" style="color: #4a5568;">Meet some of our wonderful pets looking for their forever homes</p>
+    </div>
+  </div>
+  
+  <div class="row g-4">
+    <% if (typeof featuredPets !== 'undefined' && featuredPets.length > 0) { %>
+      <% featuredPets.forEach(pet => { %>
+        <div class="col-xl-3 col-lg-4 col-md-6">
+          <div class="card h-100 border-0 shadow-sm" style="border-radius: 15px; transition: transform 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform=''">
+            <div style="height: 220px; overflow: hidden; border-radius: 15px 15px 0 0;">
+              <img src="<%= pet.mainImage %>" class="card-img-top h-100 w-100" alt="<%= pet.name %>" style="object-fit: cover;" onerror="this.src='https://images.unsplash.com/photo-1530281700549-e82e7bf110d6?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80'">
+            </div>
+            <div class="card-body">
+              <h5 class="card-title fw-bold" style="color: #2c3e50;"><%= pet.name %></h5>
+              <div class="d-flex gap-2 mb-2">
+                <span class="badge rounded-pill py-2 px-3" style="background-color: #e3f2fd; color: #1976d2;">
+                  <%= pet.species %>
+                </span>
+                <span class="badge rounded-pill py-2 px-3" style="background-color: #e9ecef; color: #495057;">
+                  <%= pet.breed %>
+                </span>
+              </div>
+              <p class="card-text mb-3" style="color: #6c757d;">
+                <i class="fas fa-birthday-cake me-2"></i><%= pet.age.value %> <%= pet.age.unit %> old
+              </p>
+              <a href="/pets/<%= pet._id %>" class="btn btn-outline-primary w-100 py-2" style="border-radius: 8px;">
+                View Details <i class="fas fa-arrow-right ms-2"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      <% }); %>
+    <% } else { %>
+      <div class="col-12 text-center py-5">
+        <div style="width: 120px; height: 120px; background-color: #f8f9fa; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+          <i class="fas fa-paw fa-3x" style="color: #dee2e6;"></i>
+        </div>
+        <h5 class="mb-3" style="color: #6c757d;">No featured pets available</h5>
+        <a href="/pets" class="btn btn-primary px-4">Browse All Pets</a>
+      </div>
+    <% } %>
+  </div>
+</div>
+
+<!-- Featured Products Section -->
+<div class="container mb-5">
+  <div class="row justify-content-center mb-4">
+    <div class="col-lg-8 text-center">
+      <h2 class="fw-bold mb-3" style="color: #2c3e50;">Featured Products</h2>
+      <p class="lead" style="color: #4a5568;">Quality supplies for your pet's needs</p>
+    </div>
+  </div>
+  
+  <div class="row g-4">
+    <% if (typeof featuredProducts !== 'undefined' && featuredProducts.length > 0) { %>
+      <% featuredProducts.forEach(product => { %>
+        <div class="col-xl-3 col-lg-4 col-md-6">
+          <div class="card h-100 border-0 shadow-sm" style="border-radius: 15px; transition: transform 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform=''">
+            <div style="height: 220px; overflow: hidden; border-radius: 15px 15px 0 0; position: relative;">
+              <img src="<%= product.mainImage %>" class="card-img-top h-100 w-100" alt="<%= product.name %>" style="object-fit: cover;" onerror="this.src='https://images.unsplash.com/photo-1589927986089-35812388d1f4?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80'">
+              <% if (product.onSale) { %>
+                <div class="position-absolute top-0 end-0 m-2">
+                  <span class="badge bg-danger py-2 px-3" style="font-size: 0.8rem;">SALE</span>
+                </div>
+              <% } %>
+            </div>
+            <div class="card-body">
+              <h5 class="card-title fw-bold" style="color: #2c3e50;"><%= product.name %></h5>
+              <div class="d-flex gap-2 mb-3">
+                <span class="badge rounded-pill py-2 px-3" style="background-color: #e0f7fa; color: #00acc1;">
+                  <%= product.category %>
+                </span>
+                <span class="badge rounded-pill py-2 px-3" style="background-color: #e9ecef; color: #495057;">
+                  <%= product.petType %>
+                </span>
+              </div>
+              <p class="card-text mb-3">
+                <% if (product.onSale) { %>
+                  <span class="text-decoration-line-through" style="color: #6c757d;">$<%= product.price.toFixed(2) %></span>
+                  <span class="fw-bold ms-2" style="color: #dc3545; font-size: 1.2rem;">$<%= product.salePrice.toFixed(2) %></span>
+                <% } else { %>
+                  <span class="fw-bold" style="color: #2c3e50; font-size: 1.2rem;">$<%= product.price.toFixed(2) %></span>
+                <% } %>
+              </p>
+              <a href="/products/<%= product._id %>" class="btn btn-outline-primary w-100 py-2" style="border-radius: 8px;">
+                View Details <i class="fas fa-arrow-right ms-2"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      <% }); %>
+    <% } else { %>
+      <div class="col-12 text-center py-5">
+        <div style="width: 120px; height: 120px; background-color: #f8f9fa; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+          <i class="fas fa-shopping-basket fa-3x" style="color: #dee2e6;"></i>
+        </div>
+        <h5 class="mb-3" style="color: #6c757d;">No featured products available</h5>
+        <a href="/products" class="btn btn-primary px-4">Browse All Products</a>
+      </div>
+    <% } %>
+  </div>
+</div>
+
+<!-- Services Section -->
+<div class="container mb-5">
+  <div class="row g-4">
+    <div class="col-lg-4">
+      <div class="card h-100 border-0 shadow-sm text-center p-4" style="border-radius: 15px;">
+        <div class="card-body">
+          <div style="width: 80px; height: 80px; background-color: #e3f2fd; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+            <i class="fas fa-paw fa-2x" style="color: #1976d2;"></i>
+          </div>
+          <h4 class="card-title fw-bold mb-3" style="color: #2c3e50;">Adopt a Pet</h4>
+          <p class="card-text mb-4" style="color: #4a5568;">Find your perfect companion from our selection of pets looking for loving homes.</p>
+          <a href="/pets" class="btn btn-primary px-4 py-2" style="border-radius: 8px;">
+            Browse Pets <i class="fas fa-arrow-right ms-2"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-lg-4">
+      <div class="card h-100 border-0 shadow-sm text-center p-4" style="border-radius: 15px;">
+        <div class="card-body">
+          <div style="width: 80px; height: 80px; background-color: #e8f5e9; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+            <i class="fas fa-shopping-cart fa-2x" style="color: #388e3c;"></i>
+          </div>
+          <h4 class="card-title fw-bold mb-3" style="color: #2c3e50;">Shop Products</h4>
+          <p class="card-text mb-4" style="color: #4a5568;">Find everything your pet needs, from food to toys and accessories.</p>
+          <a href="/products" class="btn btn-primary px-4 py-2" style="border-radius: 8px;">
+            Shop Now <i class="fas fa-arrow-right ms-2"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-lg-4">
+      <div class="card h-100 border-0 shadow-sm text-center p-4" style="border-radius: 15px;">
+        <div class="card-body">
+          <div style="width: 80px; height: 80px; background-color: #fff3e0; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+            <i class="fas fa-stethoscope fa-2x" style="color: #e65100;"></i>
+          </div>
+          <h4 class="card-title fw-bold mb-3" style="color: #2c3e50;">Vet Services</h4>
+          <p class="card-text mb-4" style="color: #4a5568;">Book appointments with qualified veterinarians for your pet's health needs.</p>
+          <a href="/appointments" class="btn btn-primary px-4 py-2" style="border-radius: 8px;">
+            Book Appointment <i class="fas fa-arrow-right ms-2"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

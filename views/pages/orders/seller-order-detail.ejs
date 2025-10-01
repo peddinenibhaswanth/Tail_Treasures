@@ -1,0 +1,153 @@
+<div class="container py-5">
+    <div class="row">
+      <div class="col-lg-8 mx-auto">
+        <nav aria-label="breadcrumb" class="mb-4">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/dashboard">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="/dashboard/sales">My Sales</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Order #<%= order._id.toString().slice(-6).toUpperCase() %></li>
+          </ol>
+        </nav>
+  
+        <div class="card shadow-sm mb-4">
+          <div class="card-header bg-white">
+            <div class="d-flex justify-content-between align-items-center">
+              <h4 class="mb-0">Order #<%= order._id.toString().slice(-6).toUpperCase() %></h4>
+              <div>
+                <span class="badge <%= order.status === 'placed' ? 'bg-primary' : 
+                                      order.status === 'processing' ? 'bg-info' : 
+                                      order.status === 'shipped' ? 'bg-warning text-dark' : 
+                                      order.status === 'delivered' ? 'bg-success' : 
+                                      'bg-danger' %>">
+                  <%= order.status.charAt(0).toUpperCase() + order.status.slice(1) %>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="row mb-4">
+              <div class="col-md-6">
+                <h5 class="text-muted">Order Information</h5>
+                <p class="mb-1"><strong>Date:</strong> <%= new Date(order.createdAt).toLocaleString() %></p>
+                <p class="mb-1"><strong>Customer:</strong> <%= order.customer.name %></p>
+                <p class="mb-1"><strong>Email:</strong> <%= order.customer.email %></p>
+                <% if (order.customer.phone) { %>
+                  <p class="mb-1"><strong>Phone:</strong> <%= order.customer.phone %></p>
+                <% } %>
+                <p class="mb-1"><strong>Payment Method:</strong> <%= order.paymentMethod.charAt(0).toUpperCase() + order.paymentMethod.slice(1) %></p>
+                <p class="mb-1"><strong>Payment Status:</strong> 
+                  <span class="badge <%= order.paymentStatus === 'completed' ? 'bg-success' : 
+                                        order.paymentStatus === 'pending' ? 'bg-warning text-dark' : 
+                                        order.paymentStatus === 'refunded' ? 'bg-info' : 
+                                        'bg-danger' %>">
+                    <%= order.paymentStatus.charAt(0).toUpperCase() + order.paymentStatus.slice(1) %>
+                  </span>
+                </p>
+              </div>
+              <div class="col-md-6">
+                <h5 class="text-muted">Shipping Address</h5>
+                <address>
+                  <strong><%= order.shippingAddress.name %></strong><br>
+                  <%= order.shippingAddress.street %><br>
+                  <%= order.shippingAddress.city %>, <%= order.shippingAddress.state %> <%= order.shippingAddress.zipCode %><br>
+                  <%= order.shippingAddress.country %><br>
+                  <% if (order.shippingAddress.phone) { %>
+                    Phone: <%= order.shippingAddress.phone %>
+                  <% } %>
+                </address>
+              </div>
+            </div>
+  
+            <h5 class="text-muted mb-3">Your Items in This Order</h5>
+            <div class="table-responsive mb-4">
+              <table class="table table-hover">
+                <thead class="table-light">
+                  <tr>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th class="text-end">Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% sellerItems.forEach(item => { %>
+                    <tr>
+                      <td>
+                        <div class="d-flex align-items-center">
+                          <% if (item.image) { %>
+                            <img src="<%= item.image %>" alt="<%= item.name %>" class="img-thumbnail me-3" style="width: 60px; height: 60px; object-fit: cover;">
+                          <% } else if (item.product && item.product.mainImage) { %>
+                            <img src="<%= item.product.mainImage %>" alt="<%= item.product.name %>" class="img-thumbnail me-3" style="width: 60px; height: 60px; object-fit: cover;">
+                          <% } else { %>
+                            <div class="bg-light me-3" style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;">
+                              <i class="fas fa-box text-muted"></i>
+                            </div>
+                          <% } %>
+                          <div>
+                            <h6 class="mb-0"><%= item.name || (item.product ? item.product.name : 'Product') %></h6>
+                          </div>
+                        </div>
+                      </td>
+                      <td>$<%= item.price.toFixed(2) %></td>
+                      <td><%= item.quantity %></td>
+                      <td class="text-end">$<%= (item.price * item.quantity).toFixed(2) %></td>
+                    </tr>
+                  <% }); %>
+                </tbody>
+                <tfoot class="table-light">
+                  <tr>
+                    <td colspan="3" class="text-end"><strong>Your Total:</strong></td>
+                    <td class="text-end"><strong>$<%= sellerTotal.toFixed(2) %></strong></td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+  
+            <% if (order.notes) { %>
+              <div class="mb-4">
+                <h5 class="text-muted mb-2">Order Notes</h5>
+                <p class="mb-0"><%= order.notes %></p>
+              </div>
+            <% } %>
+  
+            <div class="d-flex justify-content-between">
+              <div>
+                <% if (order.status === 'placed' || order.status === 'processing') { %>
+                  <form action="/orders/<%= order._id %>/status" method="POST" class="d-inline">
+                    <input type="hidden" name="status" value="processing">
+                    <button type="submit" class="btn btn-primary me-2">
+                      <i class="fas fa-box me-1"></i> Mark as Processing
+                    </button>
+                  </form>
+                <% } %>
+                
+                <% if (order.status === 'processing') { %>
+                  <form action="/orders/<%= order._id %>/status" method="POST" class="d-inline">
+                    <input type="hidden" name="status" value="shipped">
+                    <button type="submit" class="btn btn-primary me-2">
+                      <i class="fas fa-shipping-fast me-1"></i> Mark as Shipped
+                    </button>
+                  </form>
+                <% } %>
+                
+                <% if (order.status === 'shipped') { %>
+                  <form action="/orders/<%= order._id %>/status" method="POST" class="d-inline">
+                    <input type="hidden" name="status" value="delivered">
+                    <button type="submit" class="btn btn-success me-2">
+                      <i class="fas fa-check-circle me-1"></i> Mark as Delivered
+                    </button>
+                  </form>
+                <% } %>
+              </div>
+              <div>
+                <a href="/dashboard/sales" class="btn btn-outline-secondary">
+                  <i class="fas fa-arrow-left me-1"></i> Back to Sales
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  

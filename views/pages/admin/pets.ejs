@@ -1,0 +1,194 @@
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<div class="container-fluid py-4">
+  <div class="row mb-4">
+    <div class="col">
+      <h2 class="mb-0">Pet Management</h2>
+      <p class="text-muted">Manage all pets in the system</p>
+    </div>
+    <div class="col-auto">
+      <a href="/pets/new" class="btn btn-primary">
+        <i class="fas fa-plus me-2"></i>Add New Pet
+      </a>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="card mb-4">
+    <div class="card-body">
+      <form action="/admin/pets" method="GET" class="row g-3">
+        <div class="col-md-3">
+          <label for="species" class="form-label">Species</label>
+          <select class="form-select" id="species" name="species">
+            <option value="">All Species</option>
+            <option value="dog" <%= filter && filter.species === 'dog' ? 'selected' : '' %>>Dog</option>
+            <option value="cat" <%= filter && filter.species === 'cat' ? 'selected' : '' %>>Cat</option>
+            <option value="bird" <%= filter && filter.species === 'bird' ? 'selected' : '' %>>Bird</option>
+            <option value="small-animal" <%= filter && filter.species === 'small-animal' ? 'selected' : '' %>>Small Animal</option>
+            <option value="other" <%= filter && filter.species === 'other' ? 'selected' : '' %>>Other</option>
+          </select>
+        </div>
+        <div class="col-md-3">
+          <label for="status" class="form-label">Status</label>
+          <select class="form-select" id="status" name="status">
+            <option value="">All Statuses</option>
+            <option value="available" <%= filter && filter.status === 'available' ? 'selected' : '' %>>Available</option>
+            <option value="pending" <%= filter && filter.status === 'pending' ? 'selected' : '' %>>Pending</option>
+            <option value="adopted" <%= filter && filter.status === 'adopted' ? 'selected' : '' %>>Adopted</option>
+          </select>
+        </div>
+        <div class="col-md-3 d-flex align-items-end">
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-filter me-2"></i>Apply Filters
+          </button>
+          <a href="/admin/pets" class="btn btn-outline-secondary ms-2">
+            <i class="fas fa-times me-2"></i>Clear
+          </a>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Pets Table -->
+  <div class="card shadow-sm">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <thead class="bg-light">
+            <tr>
+              <th style="width: 60px;">Image</th>
+              <th>Name</th>
+              <th>Species</th>
+              <th>Breed</th>
+              <th>Age</th>
+              <th>Shelter</th>
+              <th>Status</th>
+              <th>Added</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (pets && pets.length > 0) { %>
+              <% pets.forEach(pet => { %>
+                <tr>
+                  <td>
+                    <img src="<%= pet.mainImage || '/images/pet-placeholder.jpg' %>" alt="<%= pet.name %>" class="img-thumbnail" style="width: 50px; height: 50px; object-fit: cover;">
+                  </td>
+                  <td><a href="/pets/<%= pet._id %>" class="text-decoration-none"><%= pet.name %></a></td>
+                  <td><span class="text-capitalize"><%= pet.species %></span></td>
+                  <td><%= pet.breed || 'N/A' %></td>
+                  <td><%= pet.age.value %> <%= pet.age.unit %></td>
+                  <td>
+                    <% if (pet.shelter && typeof pet.shelter === 'object') { %>
+                      <%= pet.shelter.name %>
+                    <% } else { %>
+                      Unknown
+                    <% } %>
+                  </td>
+                  <td>
+                    <% if (pet.status === 'available') { %>
+                      <span class="badge bg-success">Available</span>
+                    <% } else if (pet.status === 'pending') { %>
+                      <span class="badge bg-warning text-dark">Pending</span>
+                    <% } else if (pet.status === 'adopted') { %>
+                      <span class="badge bg-info">Adopted</span>
+                    <% } %>
+                  </td>
+                  <td><%= new Date(pet.createdAt).toLocaleDateString() %></td>
+                  <td>
+                    <div class="btn-group btn-group-sm">
+                      <a href="/pets/<%= pet._id %>" class="btn btn-outline-primary">
+                        <i class="fas fa-eye"></i>
+                      </a>
+                      <!-- <a href="/pets/<%= pet._id %>/edit" class="btn btn-outline-secondary">
+                        <i class="fas fa-edit"></i>
+                      </a> -->
+                      <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deletePetModal<%= pet._id %>">
+                        <i class="fas fa-trash-alt"></i>
+                      </button>
+                    </div>
+                    
+                    <!-- Delete Modal -->
+                    <div class="modal fade" id="deletePetModal<%= pet._id %>" tabindex="-1" aria-labelledby="deletePetModalLabel<%= pet._id %>" aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="deletePetModalLabel<%= pet._id %>">Confirm Delete</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body">
+                            Are you sure you want to delete <strong><%= pet.name %></strong>? This action cannot be undone.
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <form action="/pets/<%= pet._id %>?_method=DELETE" method="POST">
+                              <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              <% }); %>
+            <% } else { %>
+              <tr>
+                <td colspan="9" class="text-center py-4">No pets found</td>
+              </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    
+    <!-- Pagination -->
+    <% if (pages > 1) { %>
+      <div class="card-footer">
+        <nav aria-label="Page navigation">
+          <ul class="pagination justify-content-center mb-0">
+            <% if (current > 1) { %>
+              <li class="page-item">
+                <a class="page-link" href="/admin/pets?page=<%= current - 1 %><%= filter ? `&species=${filter.species || ''}&status=${filter.status || ''}` : '' %>" aria-label="Previous">
+                  <span aria-hidden="true">&laquo;</span>
+                </a>
+              </li>
+            <% } else { %>
+              <li class="page-item disabled">
+                <a class="page-link" href="#" aria-label="Previous">
+                  <span aria-hidden="true">&laquo;</span>
+                </a>
+              </li>
+            <% } %>
+            
+            <% for (let i = 1; i <= pages; i++) { %>
+              <% if (i === current) { %>
+                <li class="page-item active"><a class="page-link" href="#"><%= i %></a></li>
+              <% } else { %>
+                <li class="page-item">
+                  <a class="page-link" href="/admin/pets?page=<%= i %><%= filter ? `&species=${filter.species || ''}&status=${filter.status || ''}` : '' %>"><%= i %></a>
+                </li>
+              <% } %>
+            <% } %>
+            
+            <% if (current < pages) { %>
+              <li class="page-item">
+                <a class="page-link" href="/admin/pets?page=<%= current + 1 %><%= filter ? `&species=${filter.species || ''}&status=${filter.status || ''}` : '' %>" aria-label="Next">
+                  <span aria-hidden="true">&raquo;</span>
+                </a>
+              </li>
+            <% } else { %>
+              <li class="page-item disabled">
+                <a class="page-link" href="#" aria-label="Next">
+                  <span aria-hidden="true">&raquo;</span>
+                </a>
+              </li>
+            <% } %>
+          </ul>
+        </nav>
+      </div>
+    <% } %>
+  </div>
+</div>
+
+<%- include('../../partials/admin-footer') %>

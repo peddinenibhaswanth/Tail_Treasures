@@ -1,0 +1,198 @@
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <div class="card">
+      <div class="card-header bg-primary text-white">
+        <h4 class="mb-0"><i class="fas fa-calendar-alt me-2"></i>Book a Veterinary Appointment</h4>
+      </div>
+      <div class="card-body">
+        <form action="/appointments" method="POST">
+          <% if (selectedService) { %>
+            <input type="hidden" name="service" value="<%= selectedService %>">
+          <% } %>
+          
+          <% if (selectedVet) { %>
+            <input type="hidden" name="veterinary" value="<%= selectedVet._id %>">
+          <% } %>
+          
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="petName" class="form-label">Pet Name</label>
+              <input type="text" class="form-control" id="petName" name="petName" required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="petType" class="form-label">Pet Type</label>
+              <select class="form-select" id="petType" name="petType" required>
+                <option value="">Select Pet Type</option>
+                <option value="dog">Dog</option>
+                <option value="cat">Cat</option>
+                <option value="bird">Bird</option>
+                <option value="rabbit">Rabbit</option>
+                <option value="hamster">Hamster</option>
+                <option value="guinea pig">Guinea Pig</option>
+                <option value="reptile">Reptile</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+          </div>
+          
+          <% if (!selectedVet) { %>
+            <div class="mb-3">
+              <label for="veterinary" class="form-label">Select Veterinarian</label>
+              <select class="form-select" id="veterinary" name="veterinary" required>
+                <option value="">Choose a Veterinarian</option>
+                <% vets.forEach(vet => { %>
+                  <option value="<%= vet._id %>"><%= vet.name %> (<%= vet.vetInfo.specialization %>)</option>
+                <% }); %>
+              </select>
+            </div>
+          <% } else { %>
+            <div class="mb-3">
+              <label class="form-label">Selected Veterinarian</label>
+              <div class="card">
+                <div class="row g-0">
+                  <div class="col-3">
+                    <img src="<%= selectedVet.profileImage %>" class="img-fluid rounded-start" alt="<%= selectedVet.name %>" style="height: 100%; object-fit: cover;">
+                  </div>
+                  <div class="col-9">
+                    <div class="card-body">
+                      <h6 class="card-title"><%= selectedVet.name %></h6>
+                      <p class="card-text"><small class="text-muted"><%= selectedVet.vetInfo.specialization %></small></p>
+                      <p class="card-text"><small>Experience: <%= selectedVet.vetInfo.experience %> years</small></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <% } %>
+          
+          <% if (!selectedService) { %>
+            <div class="mb-3">
+              <label for="reason" class="form-label">Reason for Visit</label>
+              <select class="form-select" id="reason" name="reason" required>
+                <option value="">Select Reason</option>
+                <option value="wellness">Wellness Exam</option>
+                <option value="vaccination">Vaccination</option>
+                <option value="illness">Illness/Injury</option>
+                <option value="dental">Dental Care</option>
+                <option value="spay-neuter">Spay/Neuter</option>
+                <option value="checkup">Follow-up Checkup</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+          <% } else { %>
+            <div class="mb-3">
+              <label class="form-label">Service Type</label>
+              <input type="text" class="form-control" value="<%= selectedService.charAt(0).toUpperCase() + selectedService.slice(1) %>" readonly>
+              <input type="hidden" name="reason" value="<%= selectedService %>">
+            </div>
+          <% } %>
+          
+          <div class="mb-3">
+            <label for="additionalInfo" class="form-label">Additional Information</label>
+            <textarea class="form-control" id="additionalInfo" name="notes" rows="3" placeholder="Please provide any additional details about your pet's condition or concerns"></textarea>
+          </div>
+          
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="date" class="form-label">Preferred Date</label>
+              <input type="date" class="form-control" id="date" name="date" min="<%= new Date().toISOString().split('T')[0] %>" required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="time" class="form-label">Preferred Time</label>
+              <select class="form-select" id="time" name="time" required>
+                <option value="">Select Time</option>
+                <option value="09:00">9:00 AM</option>
+                <option value="10:00">10:00 AM</option>
+                <option value="11:00">11:00 AM</option>
+                <option value="12:00">12:00 PM</option>
+                <option value="13:00">1:00 PM</option>
+                <option value="14:00">2:00 PM</option>
+                <option value="15:00">3:00 PM</option>
+                <option value="16:00">4:00 PM</option>
+                <option value="17:00">5:00 PM</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <a href="/appointments" class="btn btn-outline-secondary">Cancel</a>
+            <button type="submit" class="btn btn-primary">Book Appointment</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const dateInput = document.getElementById('date');
+    const timeInput = document.getElementById('time');
+    const vetSelect = document.getElementById('veterinary');
+    
+    // Set minimum date to today
+    const today = new Date().toISOString().split('T')[0];
+    dateInput.setAttribute('min', today);
+    
+    // If vet is selected, fetch available times
+    if (vetSelect) {
+      vetSelect.addEventListener('change', function() {
+        const vetId = this.value;
+        if (vetId) {
+          const dateValue = dateInput.value;
+          if (dateValue) {
+            fetchAvailableTimes(vetId, dateValue);
+          }
+        }
+      });
+    }
+    
+    // When date changes, fetch available times if vet is selected
+    dateInput.addEventListener('change', function() {
+      const dateValue = this.value;
+      const vetId = vetSelect ? vetSelect.value : document.querySelector('input[name="veterinary"]').value;
+      
+      if (vetId && dateValue) {
+        fetchAvailableTimes(vetId, dateValue);
+      }
+    });
+    
+    // Function to fetch available times
+    function fetchAvailableTimes(vetId, date) {
+      fetch(`/appointments/available-times?vet=${vetId}&date=${date}`)
+        .then(response => response.json())
+        .then(data => {
+          // Clear current options
+          timeInput.innerHTML = '<option value="">Select Time</option>';
+          
+          // Add available times
+          if (data.availableTimes && data.availableTimes.length > 0) {
+            data.availableTimes.forEach(time => {
+              const option = document.createElement('option');
+              option.value = time;
+              option.textContent = formatTime(time);
+              timeInput.appendChild(option);
+            });
+          } else {
+            const option = document.createElement('option');
+            option.value = "";
+            option.textContent = "No available times";
+            option.disabled = true;
+            timeInput.appendChild(option);
+          }
+        })
+        .catch(error => {
+          console.error('Error fetching available times:', error);
+        });
+    }
+    
+    // Format time from 24h to 12h format
+    function formatTime(time) {
+      const [hours, minutes] = time.split(':');
+      const hour = parseInt(hours);
+      const ampm = hour >= 12 ? 'PM' : 'AM';
+      const hour12 = hour % 12 || 12;
+      return `${hour12}:${minutes} ${ampm}`;
+    }
+  });
+</script>

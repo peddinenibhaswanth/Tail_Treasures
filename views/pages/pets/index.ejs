@@ -1,0 +1,144 @@
+<div class="row">
+  <div class="col-md-3">
+    <div class="card mb-4">
+      <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">Filter Pets</h5>
+      </div>
+      <div class="card-body">
+        <form action="/pets" method="GET">
+          <div class="mb-3">
+            <label for="species" class="form-label">Species</label>
+            <select class="form-select" id="species" name="species">
+              <option value="">All Species</option>
+              <option value="dog" <%= filter && filter.species === 'dog' ? 'selected' : '' %>>Dogs</option>
+              <option value="cat" <%= filter && filter.species === 'cat' ? 'selected' : '' %>>Cats</option>
+              <option value="bird" <%= filter && filter.species === 'bird' ? 'selected' : '' %>>Birds</option>
+              <option value="rabbit" <%= filter && filter.species === 'rabbit' ? 'selected' : '' %>>Rabbits</option>
+              <option value="hamster" <%= filter && filter.species === 'hamster' ? 'selected' : '' %>>Hamsters</option>
+              <option value="guinea pig" <%= filter && filter.species === 'guinea pig' ? 'selected' : '' %>>Guinea Pigs</option>
+              <option value="fish" <%= filter && filter.species === 'fish' ? 'selected' : '' %>>Fish</option>
+              <option value="reptile" <%= filter && filter.species === 'reptile' ? 'selected' : '' %>>Reptiles</option>
+              <option value="other" <%= filter && filter.species === 'other' ? 'selected' : '' %>>Other</option>
+            </select>
+          </div>
+          
+          <div class="mb-3">
+            <label for="size" class="form-label">Size</label>
+            <select class="form-select" id="size" name="size">
+              <option value="">Any Size</option>
+              <option value="small" <%= filter && filter.size === 'small' ? 'selected' : '' %>>Small</option>
+              <option value="medium" <%= filter && filter.size === 'medium' ? 'selected' : '' %>>Medium</option>
+              <option value="large" <%= filter && filter.size === 'large' ? 'selected' : '' %>>Large</option>
+              <option value="extra large" <%= filter && filter.size === 'extra large' ? 'selected' : '' %>>Extra Large</option>
+            </select>
+          </div>
+          
+          <div class="mb-3">
+            <label for="age" class="form-label">Age</label>
+            <select class="form-select" id="age" name="age">
+              <option value="">Any Age</option>
+              <option value="0-1" <%= filter && filter.age === '0-1' ? 'selected' : '' %>>Under 1 year</option>
+              <option value="1-3" <%= filter && filter.age === '1-3' ? 'selected' : '' %>>1-3 years</option>
+              <option value="3-7" <%= filter && filter.age === '3-7' ? 'selected' : '' %>>3-7 years</option>
+              <option value="7-100" <%= filter && filter.age === '7-100' ? 'selected' : '' %>>7+ years</option>
+            </select>
+          </div>
+          
+          <div class="mb-3">
+            <label for="gender" class="form-label">Gender</label>
+            <select class="form-select" id="gender" name="gender">
+              <option value="">Any Gender</option>
+              <option value="male" <%= filter && filter.gender === 'male' ? 'selected' : '' %>>Male</option>
+              <option value="female" <%= filter && filter.gender === 'female' ? 'selected' : '' %>>Female</option>
+            </select>
+          </div>
+          
+          <div class="d-grid">
+            <button type="submit" class="btn btn-primary">Apply Filters</button>
+            <a href="/pets" class="btn btn-outline-secondary mt-2">Clear Filters</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  
+  <div class="col-md-9">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2>Available Pets</h2>
+      <div class="input-group" style="max-width: 300px;">
+        <form action="/pets/search" method="GET" class="d-flex w-100">
+          <input type="text" class="form-control" placeholder="Search pets..." name="query" aria-label="Search pets">
+          <button class="btn btn-primary" type="submit"><i class="fas fa-search"></i></button>
+        </form>
+      </div>
+    </div>
+    
+    <% if (pets && pets.length > 0) { %>
+      <div class="row">
+        <% pets.forEach(pet => { %>
+          <div class="col-md-4 mb-4">
+            <div class="card h-100">
+              <div class="position-relative">
+                <img src="<%= pet.mainImage %>" class="card-img-top" alt="<%= pet.name %>" style="height: 200px; object-fit: cover;">
+                <span class="position-absolute top-0 end-0 badge bg-<%= pet.status === 'available' ? 'success' : pet.status === 'pending' ? 'warning' : 'danger' %> m-2">
+                  <%= pet.status.charAt(0).toUpperCase() + pet.status.slice(1) %>
+                </span>
+              </div>
+              <div class="card-body">
+                <h5 class="card-title"><%= pet.name %></h5>
+                <p class="card-text mb-1">
+                  <span class="badge bg-primary"><%= pet.species.charAt(0).toUpperCase() + pet.species.slice(1) %></span>
+                  <% if (pet.breed) { %>
+                    <span class="badge bg-secondary"><%= pet.breed %></span>
+                  <% } %>
+                </p>
+                <p class="card-text mb-1">
+                  <small><i class="fas fa-ruler me-1"></i><%= pet.size.charAt(0).toUpperCase() + pet.size.slice(1) %></small>
+                  <small class="ms-2"><i class="fas fa-birthday-cake me-1"></i><%= pet.age.value %> <%= pet.age.unit %></small>
+                </p>
+                <!-- <p class="card-text mb-1">
+                  <small><i class="fas fa-map-marker-alt me-1"></i></small>
+                </p> -->
+                <div class="mt-2">
+                  <a href="/pets/<%= pet._id %>" class="btn btn-sm btn-primary">View Details</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% }); %>
+      </div>
+      
+      <% if (pages > 1) { %>
+        <nav aria-label="Page navigation">
+          <ul class="pagination justify-content-center">
+            <% if (current > 1) { %>
+              <li class="page-item">
+                <a class="page-link" href="/pets?page=<%= current - 1 %><% for (const key in filter) { if (filter[key] && key !== 'page') { %>&<%= key %>=<%= filter[key] %><% } } %>" aria-label="Previous">
+                  <span aria-hidden="true">&laquo;</span>
+                </a>
+              </li>
+            <% } %>
+            
+            <% for (let i = 1; i <= pages; i++) { %>
+              <li class="page-item <%= current == i ? 'active' : '' %>">
+                <a class="page-link" href="/pets?page=<%= i %><% for (const key in filter) { if (filter[key] && key !== 'page') { %>&<%= key %>=<%= filter[key] %><% } } %>"><%= i %></a>
+              </li>
+            <% } %>
+            
+            <% if (current < pages) { %>
+              <li class="page-item">
+                <a class="page-link" href="/pets?page=<%= current + 1 %><% for (const key in filter) { if (filter[key] && key !== 'page') { %>&<%= key %>=<%= filter[key] %><% } } %>" aria-label="Next">
+                  <span aria-hidden="true">&raquo;</span>
+                </a>
+              </li>
+            <% } %>
+          </ul>
+        </nav>
+      <% } %>
+    <% } else { %>
+      <div class="alert alert-info">
+        <i class="fas fa-info-circle me-2"></i>No pets found matching your criteria. Try adjusting your filters.
+      </div>
+    <% } %>
+  </div>
+</div>

@@ -1,0 +1,280 @@
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <div class="card">
+      <div class="card-header bg-primary text-white">
+        <h4 class="mb-0"><i class="fas fa-user-plus me-2"></i>Register</h4>
+      </div>
+      <div class="card-body">
+        <form action="/auth/register" method="POST" enctype="multipart/form-data">
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="name" class="form-label">Full Name</label>
+              <input type="text" class="form-control" id="name" name="name" value="<%= typeof name !== 'undefined' ? name : '' %>" required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="email" class="form-label">Email</label>
+              <input type="email" class="form-control" id="email" name="email" value="<%= typeof email !== 'undefined' ? email : '' %>" required>
+            </div>
+          </div>
+          
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="password" class="form-label">Password</label>
+              <input type="password" class="form-control" id="password" name="password" required>
+              <small class="text-muted">Password must be at least 6 characters</small>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="password2" class="form-label">Confirm Password</label>
+              <input type="password" class="form-control" id="password2" name="password2" required>
+            </div>
+          </div>
+          
+          <div class="mb-3">
+            <label for="role" class="form-label">Account Type</label>
+            <select class="form-select" id="role" name="role" required onchange="toggleAdditionalFields()">
+              <option value="customer" <%= typeof role !== 'undefined' && role === 'customer' ? 'selected' : '' %>>Customer</option>
+              <option value="seller" <%= typeof role !== 'undefined' && role === 'seller' ? 'selected' : '' %>>Product Seller</option>
+              <option value="veterinary" <%= typeof role !== 'undefined' && role === 'veterinary' ? 'selected' : '' %>>Veterinary</option>
+            </select>
+            <small class="text-muted">Seller and Veterinary accounts require admin approval before activation</small>
+          </div>
+          
+          <!-- Seller Additional Fields -->
+          <div id="sellerFields" style="display: none;">
+            <div class="card mb-3">
+              <div class="card-header bg-light">
+                <h5 class="mb-0">Seller Information</h5>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-6 mb-3">
+                    <label for="businessName" class="form-label">Business Name</label>
+                    <input type="text" class="form-control" id="businessName" name="businessName">
+                  </div>
+                  <div class="col-md-6 mb-3">
+                    <label for="taxId" class="form-label">Tax ID / Business License</label>
+                    <input type="text" class="form-control" id="taxId" name="taxId">
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <label for="businessAddress" class="form-label">Business Address</label>
+                  <input type="text" class="form-control" id="businessAddress" name="businessAddress">
+                </div>
+                <div class="row">
+                  <div class="col-md-6 mb-3">
+                    <label for="website" class="form-label">Website (Optional)</label>
+                    <input type="url" class="form-control" id="website" name="website">
+                  </div>
+                  <div class="col-md-6 mb-3">
+                    <label for="yearsInBusiness" class="form-label">Years in Business</label>
+                    <input type="number" class="form-control" id="yearsInBusiness" name="yearsInBusiness" min="0">
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <label for="description" class="form-label">Business Description</label>
+                  <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Product Categories</label>
+                  <div class="row">
+                    <div class="col-md-4">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="food" name="productCategories" value="food">
+                        <label class="form-check-label" for="food">Pet Food</label>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="toys" name="productCategories" value="toys">
+                        <label class="form-check-label" for="toys">Toys</label>
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="accessories" name="productCategories" value="accessories">
+                        <label class="form-check-label" for="accessories">Accessories</label>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="health" name="productCategories" value="health">
+                        <label class="form-check-label" for="health">Health Products</label>
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="grooming" name="productCategories" value="grooming">
+                        <label class="form-check-label" for="grooming">Grooming</label>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="other" name="productCategories" value="other">
+                        <label class="form-check-label" for="other">Other</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Veterinary Additional Fields -->
+          <div id="veterinaryFields" style="display: none;">
+            <div class="card mb-3">
+              <div class="card-header bg-light">
+                <h5 class="mb-0">Veterinary Information</h5>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-6 mb-3">
+                    <label for="licenseNumber" class="form-label">License Number</label>
+                    <input type="text" class="form-control" id="licenseNumber" name="licenseNumber">
+                  </div>
+                  <div class="col-md-6 mb-3">
+                    <label for="specialization" class="form-label">Specialization</label>
+                    <input type="text" class="form-control" id="specialization" name="specialization">
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-6 mb-3">
+                    <label for="experience" class="form-label">Years of Experience</label>
+                    <input type="number" class="form-control" id="experience" name="experience" min="0">
+                  </div>
+                  <div class="col-md-6 mb-3">
+                    <label for="education" class="form-label">Education</label>
+                    <input type="text" class="form-control" id="education" name="education">
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-6 mb-3">
+                    <label for="clinicName" class="form-label">Clinic Name</label>
+                    <input type="text" class="form-control" id="clinicName" name="clinicName">
+                  </div>
+                  <div class="col-md-6 mb-3">
+                    <label for="clinicAddress" class="form-label">Clinic Address</label>
+                    <input type="text" class="form-control" id="clinicAddress" name="clinicAddress">
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <label for="bio" class="form-label">Professional Bio</label>
+                  <textarea class="form-control" id="bio" name="bio" rows="3"></textarea>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Certifications</label>
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="cert1" name="certifications" value="General Practice">
+                        <label class="form-check-label" for="cert1">General Practice</label>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="cert2" name="certifications" value="Surgery">
+                        <label class="form-check-label" for="cert2">Surgery</label>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="cert3" name="certifications" value="Dermatology">
+                        <label class="form-check-label" for="cert3">Dermatology</label>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="cert4" name="certifications" value="Cardiology">
+                        <label class="form-check-label" for="cert4">Cardiology</label>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="cert5" name="certifications" value="Oncology">
+                        <label class="form-check-label" for="cert5">Oncology</label>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="cert6" name="certifications" value="Other">
+                        <label class="form-check-label" for="cert6">Other</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Available Days</label>
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="monday" name="availableDays" value="Monday">
+                        <label class="form-check-label" for="monday">Monday</label>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="tuesday" name="availableDays" value="Tuesday">
+                        <label class="form-check-label" for="tuesday">Tuesday</label>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="wednesday" name="availableDays" value="Wednesday">
+                        <label class="form-check-label" for="wednesday">Wednesday</label>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="thursday" name="availableDays" value="Thursday">
+                        <label class="form-check-label" for="thursday">Thursday</label>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="friday" name="availableDays" value="Friday">
+                        <label class="form-check-label" for="friday">Friday</label>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="saturday" name="availableDays" value="Saturday">
+                        <label class="form-check-label" for="saturday">Saturday</label>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="sunday" name="availableDays" value="Sunday">
+                        <label class="form-check-label" for="sunday">Sunday</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-6 mb-3">
+                    <label for="startTime" class="form-label">Available Hours (Start)</label>
+                    <input type="time" class="form-control" id="startTime" name="startTime">
+                  </div>
+                  <div class="col-md-6 mb-3">
+                    <label for="endTime" class="form-label">Available Hours (End)</label>
+                    <input type="time" class="form-control" id="endTime" name="endTime">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="mb-3">
+            <label for="profileImage" class="form-label">Profile Image (Optional)</label>
+            <input type="file" class="form-control" id="profileImage" name="profileImage" accept="image/*">
+          </div>
+          
+          <div class="d-grid">
+            <button type="submit" class="btn btn-primary">Register</button>
+          </div>
+        </form>
+      </div>
+      <div class="card-footer text-center">
+        <p class="mb-0">Already have an account? <a href="/auth/login">Login</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function toggleAdditionalFields() {
+    const role = document.getElementById('role').value;
+    const sellerFields = document.getElementById('sellerFields');
+    const veterinaryFields = document.getElementById('veterinaryFields');
+    
+    // Hide all fields first
+    sellerFields.style.display = 'none';
+    veterinaryFields.style.display = 'none';
+    
+    // Show fields based on selected role
+    if (role === 'seller') {
+      sellerFields.style.display = 'block';
+    } else if (role === 'veterinary') {
+      veterinaryFields.style.display = 'block';
+    }
+  }
+  
+  // Call on page load to set initial state
+  document.addEventListener('DOMContentLoaded', function() {
+    toggleAdditionalFields();
+  });
+</script>

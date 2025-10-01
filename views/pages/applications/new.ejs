@@ -1,0 +1,109 @@
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-header bg-primary text-white">
+          <h4 class="mb-0"><i class="fas fa-file-alt me-2"></i>Adoption Application for <%= pet.name %></h4>
+        </div>
+        <div class="card-body">
+          <div class="row mb-4">
+            <div class="col-md-4">
+              <img src="<%= pet.mainImage %>" alt="<%= pet.name %>" class="img-fluid rounded">
+            </div>
+            <div class="col-md-8">
+              <h5><%= pet.name %></h5>
+              <p>
+                <span class="badge bg-primary"><%= pet.species.charAt(0).toUpperCase() + pet.species.slice(1) %></span>
+                <% if (pet.breed) { %>
+                  <span class="badge bg-secondary"><%= pet.breed %></span>
+                <% } %>
+              </p>
+              <p><strong>Age:</strong> <%= pet.age.value %> <%= pet.age.unit %></p>
+              <p><strong>Shelter:</strong> <%= pet.shelter.name %></p>
+              <p><strong>Adoption Fee:</strong> $<%= pet.adoptionFee.toFixed(2) %></p>
+            </div>
+          </div>
+          
+          <form action="/pets/<%= pet._id %>/adopt" method="POST">
+            <input type="hidden" name="petId" value="<%= pet._id %>">
+            
+            <h5 class="mb-3">Home Environment</h5>
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label for="homeType" class="form-label">Type of Home</label>
+                <select class="form-select" id="homeType" name="homeType" required>
+                  <option value="">Select Home Type</option>
+                  <option value="house">House</option>
+                  <option value="apartment">Apartment</option>
+                  <option value="condo">Condo</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label d-block">Do you have a yard?</label>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="checkbox" id="hasYard" name="hasYard">
+                  <label class="form-check-label" for="hasYard">Yes, I have a yard</label>
+                </div>
+              </div>
+            </div>
+            
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label class="form-label d-block">Do you have children?</label>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="checkbox" id="hasChildren" name="hasChildren">
+                  <label class="form-check-label" for="hasChildren">Yes, I have children</label>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <label for="childrenAges" class="form-label">If yes, what are their ages?</label>
+                <input type="text" class="form-control" id="childrenAges" name="childrenAges" placeholder="e.g., 5, 8, 12">
+              </div>
+            </div>
+            
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label class="form-label d-block">Do you have other pets?</label>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="checkbox" id="hasOtherPets" name="hasOtherPets">
+                  <label class="form-check-label" for="hasOtherPets">Yes, I have other pets</label>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <label for="otherPetsDescription" class="form-label">If yes, please describe</label>
+                <input type="text" class="form-control" id="otherPetsDescription" name="otherPetsDescription" placeholder="e.g., 2 cats, 1 dog">
+              </div>
+            </div>
+            
+            <h5 class="mb-3 mt-4">Personal Information</h5>
+            <div class="mb-3">
+              <label for="workSchedule" class="form-label">Describe your typical work schedule</label>
+              <textarea class="form-control" id="workSchedule" name="workSchedule" rows="2" required></textarea>
+            </div>
+            
+            <div class="mb-3">
+              <label for="experience" class="form-label">What experience do you have with pets?</label>
+              <textarea class="form-control" id="experience" name="experience" rows="3" required></textarea>
+            </div>
+            
+            <div class="mb-3">
+              <label for="reasonForAdopting" class="form-label">Why do you want to adopt this pet?</label>
+              <textarea class="form-control" id="reasonForAdopting" name="reasonForAdopting" rows="3" required></textarea>
+            </div>
+            
+            <div class="mb-3">
+              <label for="additionalInfo" class="form-label">Additional information you'd like to share</label>
+              <textarea class="form-control" id="additionalInfo" name="additionalInfo" rows="3"></textarea>
+            </div>
+            
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+              <a href="/pets/<%= pet._id %>" class="btn btn-outline-secondary">Cancel</a>
+              <button type="submit" class="btn btn-primary">Submit Application</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

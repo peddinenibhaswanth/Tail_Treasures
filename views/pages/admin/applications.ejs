@@ -1,0 +1,247 @@
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+
+<div class="container-fluid py-4">
+  <div class="row mb-4">
+    <div class="col">
+      <h2 class="mb-0">Adoption Applications</h2>
+      <p class="text-muted">Manage all adoption applications in the system</p>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="card mb-4">
+    <div class="card-body">
+      <form action="/admin/applications" method="GET" class="row g-3">
+        <div class="col-md-3">
+          <label for="status" class="form-label">Status</label>
+          <select class="form-select" id="status" name="status">
+            <option value="">All Statuses</option>
+            <option value="submitted" <%= filter && filter.status === 'submitted' ? 'selected' : '' %>>Submitted</option>
+            <option value="under review" <%= filter && filter.status === 'under review' ? 'selected' : '' %>>Under Review</option>
+            <option value="approved" <%= filter && filter.status === 'approved' ? 'selected' : '' %>>Approved</option>
+            <option value="denied" <%= filter && filter.status === 'denied' ? 'selected' : '' %>>Denied</option>
+          </select>
+        </div>
+        <div class="col-md-3 d-flex align-items-end">
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-filter me-2"></i>Apply Filters
+          </button>
+          <a href="/admin/applications" class="btn btn-outline-secondary ms-2">
+            <i class="fas fa-times me-2"></i>Clear
+          </a>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Applications Table -->
+  <div class="card shadow-sm">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <thead class="bg-light">
+            <tr>
+              <th>ID</th>
+              <th>Pet</th>
+              <th>Applicant</th>
+              <th>Shelter</th>
+              <th>Status</th>
+              <th>Submitted</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (applications && applications.length > 0) { %>
+              <% applications.forEach(application => { %>
+                <tr>
+                  <td><%= application._id.toString().slice(-6).toUpperCase() %></td>
+                  <td>
+                    <% if (application.pet && typeof application.pet === 'object') { %>
+                      <a href="/pets/<%= application.pet._id %>" class="text-decoration-none">
+                        <%= application.pet.name %>
+                      </a>
+                    <% } else { %>
+                      Unknown Pet
+                    <% } %>
+                  </td>
+                  <td>
+                    <% if (application.adopter && typeof application.adopter === 'object') { %>
+                      <a href="/admin/users/<%= application.adopter._id %>" class="text-decoration-none">
+                        <%= application.adopter.name %>
+                      </a>
+                    <% } else { %>
+                      Unknown User
+                    <% } %>
+                  </td>
+                  <td>
+                    <% if (application.shelter && typeof application.shelter === 'object') { %>
+                      <a href="/admin/users/<%= application.shelter._id %>" class="text-decoration-none">
+                        <%= application.shelter.name %>
+                      </a>
+                    <% } else { %>
+                      Unknown Shelter
+                    <% } %>
+                  </td>
+                  <td>
+                    <% if (application.status === 'submitted') { %>
+                      <span class="badge bg-primary">Submitted</span>
+                    <% } else if (application.status === 'under review') { %>
+                      <span class="badge bg-warning text-dark">Under Review</span>
+                    <% } else if (application.status === 'approved') { %>
+                      <span class="badge bg-success">Approved</span>
+                    <% } else if (application.status === 'denied') { %>
+                      <span class="badge bg-danger">Denied</span>
+                    <% } %>
+                  </td>
+                  <td><%= new Date(application.createdAt).toLocaleDateString() %></td>
+                  <td>
+                    <div class="btn-group btn-group-sm">
+                      <a href="/admin/applications/<%= application._id %>" class="btn btn-outline-primary">
+                        <i class="fas fa-eye"></i>
+                      </a>
+                      <% if (application.status === 'submitted' || application.status === 'under review') { %>
+                        <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#approveApplicationModal<%= application._id %>">
+                          <i class="fas fa-check"></i>
+                        </button>
+                        <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#rejectApplicationModal<%= application._id %>">
+                          <i class="fas fa-times"></i>
+                        </button>
+                      <% } %>
+                      <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteApplicationModal<%= application._id %>">
+                        <i class="fas fa-trash"></i>
+                      </button>
+                    </div>
+                    
+                    <!-- Approve Modal -->
+                    <div class="modal fade" id="approveApplicationModal<%= application._id %>" tabindex="-1" aria-labelledby="approveApplicationModalLabel<%= application._id %>" aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="approveApplicationModalLabel<%= application._id %>">Confirm Approval</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body">
+                            <p>Are you sure you want to approve this application?</p>
+                            <p>This will mark the pet as adopted and notify the applicant.</p>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <form action="/admin/applications/<%= application._id %>/approve" method="POST">
+                              <button type="submit" class="btn btn-success">Approve Application</button>
+                            </form>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <!-- Reject Modal -->
+                    <div class="modal fade" id="rejectApplicationModal<%= application._id %>" tabindex="-1" aria-labelledby="rejectApplicationModalLabel<%= application._id %>" aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="rejectApplicationModalLabel<%= application._id %>">Confirm Rejection</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <form action="/admin/applications/<%= application._id %>/deny" method="POST">
+                            <div class="modal-body">
+                              <p>Are you sure you want to reject this application?</p>
+                              <div class="mb-3">
+                                <label for="denialReason<%= application._id %>" class="form-label">Reason for rejection:</label>
+                                <textarea class="form-control" id="denialReason<%= application._id %>" name="denialReason" rows="3" required></textarea>
+                              </div>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                              <button type="submit" class="btn btn-danger">Reject Application</button>
+                            </div>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <!-- Delete Modal -->
+                    <div class="modal fade" id="deleteApplicationModal<%= application._id %>" tabindex="-1" aria-labelledby="deleteApplicationModalLabel<%= application._id %>" aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="deleteApplicationModalLabel<%= application._id %>">Confirm Deletion</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body">
+                            <p>Are you sure you want to delete this application?</p>
+                            <p class="text-danger">This action cannot be undone.</p>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <form action="/admin/applications/<%= application._id %>?_method=DELETE" method="POST">
+                              <button type="submit" class="btn btn-danger">Delete Application</button>
+                            </form>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              <% }); %>
+            <% } else { %>
+              <tr>
+                <td colspan="7" class="text-center py-4">No applications found</td>
+              </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    
+    <!-- Pagination -->
+    <% if (pages > 1) { %>
+      <div class="card-footer">
+        <nav aria-label="Page navigation">
+          <ul class="pagination justify-content-center mb-0">
+            <% if (current > 1) { %>
+              <li class="page-item">
+                <a class="page-link" href="/admin/applications?page=<%= current - 1 %><%= filter ? `&status=${filter.status || ''}` : '' %>" aria-label="Previous">
+                  <span aria-hidden="true">&laquo;</span>
+                </a>
+              </li>
+            <% } else { %>
+              <li class="page-item disabled">
+                <a class="page-link" href="#" aria-label="Previous">
+                  <span aria-hidden="true">&laquo;</span>
+                </a>
+              </li>
+            <% } %>
+            
+            <% for (let i = 1; i <= pages; i++) { %>
+              <% if (i === current) { %>
+                <li class="page-item active"><a class="page-link" href="#"><%= i %></a></li>
+              <% } else { %>
+                <li class="page-item">
+                  <a class="page-link" href="/admin/applications?page=<%= i %><%= filter ? `&status=${filter.status || ''}` : '' %>"><%= i %></a>
+                </li>
+              <% } %>
+            <% } %>
+            
+            <% if (current < pages) { %>
+              <li class="page-item">
+                <a class="page-link" href="/admin/applications?page=<%= current + 1 %><%= filter ? `&status=${filter.status || ''}` : '' %>" aria-label="Next">
+                  <span aria-hidden="true">&raquo;</span>
+                </a>
+              </li>
+            <% } else { %>
+              <li class="page-item disabled">
+                <a class="page-link" href="#" aria-label="Next">
+                  <span aria-hidden="true">&raquo;</span>
+                </a>
+              </li>
+            <% } %>
+          </ul>
+        </nav>
+      </div>
+    <% } %>
+  </div>
+</div>
+
+<%- include('../../partials/admin-footer') %>
